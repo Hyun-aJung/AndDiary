@@ -18,7 +18,12 @@
         <activity android:name=".MainActivity"/>
         <activity android:name=".LoginActivity"/>
         <activity android:name=".JoinActivity"/>
+
         <activity android:name=".ListActivity"/>
+
+        <activity android:name=".WriteMemoActivity"/>
+        <activity android:name=".WriteDrawActivity"/>
+        <activity android:name=".WritePostActivity"/>
     </application>
 
 </manifest>
