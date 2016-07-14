@@ -14,14 +14,14 @@ import android.widget.Toast;
  */
 public class JoinActivity extends Activity {
     EditText txtId,txtMail,txtName,txtPw1,txtPw2;
-    Button btJoin,btCancle,btCheck;
+    Button btJoin,btCancel,btCheck;
     String p1,p2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join);
         btJoin = (Button)findViewById(R.id.btnJoin);
-        btCancle = (Button)findViewById(R.id.btnCancle);
+        btCancel = (Button)findViewById(R.id.btnCancel);
         btCheck = (Button)findViewById(R.id.btnCheck);
 
         txtId = (EditText)findViewById(R.id.txtId);
@@ -60,7 +60,7 @@ public class JoinActivity extends Activity {
             }
         });
 
-        btCancle.setOnClickListener(new View.OnClickListener() { //cancle버튼 누르면 로그인 화면으로
+        btCancel.setOnClickListener(new View.OnClickListener() { //cancle버튼 누르면 로그인 화면으로
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(JoinActivity.this,LoginActivity.class);

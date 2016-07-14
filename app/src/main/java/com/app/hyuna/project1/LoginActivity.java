@@ -15,7 +15,7 @@ public class LoginActivity extends Activity {
     Button btJoin,btLog;
     EditText userId,userPw;
     String id, pw;
-    boolean loginOk = false;
+    boolean loginOk = true;//TODO 원래는 false여야
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +24,7 @@ public class LoginActivity extends Activity {
         btLog = (Button)findViewById(R.id.btLogin);
         userId = (EditText)findViewById(R.id.txtId);
         userPw = (EditText)findViewById(R.id.txtPw);
+        id="ha";//TODO 임시 테스트용
 
         btJoin.setOnClickListener(new View.OnClickListener() { //Join버튼 누르면 회원가입창 띄우기
             @Override
