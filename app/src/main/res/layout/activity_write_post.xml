@@ -33,7 +33,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editText"
+            android:id="@+id/edtTitle"
             android:layout_weight="10" />
 
         <TextView
@@ -49,13 +49,32 @@
         android:layout_height="wrap_content"
         android:layout_weight="1">
 
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+"
+                android:id="@+id/btnNewImg"
+                android:layout_gravity="center_vertical" />
+
+            <GridView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/gridView"
+                android:numColumns="5"
+                android:horizontalSpacing="1dp" />
+        </LinearLayout>
     </LinearLayout>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText2"
-        android:layout_gravity="center_horizontal"
+        android:id="@+id/edtMemo"
         android:lines="12" />
 
     <LinearLayout
@@ -68,7 +87,7 @@
             android:layout_width="108dp"
             android:layout_height="wrap_content"
             android:text="Save"
-            android:id="@+id/button3"
+            android:id="@+id/btnSave"
             android:layout_gravity="center"
             android:textColor="@color/second"
             android:background="#ffffff" />

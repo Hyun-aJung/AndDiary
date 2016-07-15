@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 public class MainActivity extends Activity {
     String userId;
     ImageButton btnDraw,btnSet,btnShort,btnPost;
+    final int MEMO=0,DRAW=1,POST=2,SET=3;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,7 +31,7 @@ public class MainActivity extends Activity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this,ListActivity.class);
                 intent.putExtra("userId",userId);
-                intent.putExtra("list",3);
+                intent.putExtra("list",MEMO);
                 startActivity(intent);
             }
         });
@@ -40,7 +41,7 @@ public class MainActivity extends Activity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this,ListActivity.class);
                 intent.putExtra("userId",userId);
-                intent.putExtra("list",0);
+                intent.putExtra("list",DRAW);
                 startActivity(intent);
             }
         });
@@ -50,7 +51,7 @@ public class MainActivity extends Activity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this,ListActivity.class);
                 intent.putExtra("userId",userId);
-                intent.putExtra("list",1);
+                intent.putExtra("list",POST);
                 startActivity(intent);
             }
         });
@@ -60,7 +61,7 @@ public class MainActivity extends Activity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this,ListActivity.class);
                 intent.putExtra("userId",userId);
-                intent.putExtra("list",2);
+                intent.putExtra("list",SET);
                 startActivity(intent);
             }
         });

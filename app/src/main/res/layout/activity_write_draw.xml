@@ -33,7 +33,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editText"
+            android:id="@+id/edtTitle"
             android:layout_weight="10" />
 
         <TextView
@@ -46,40 +46,78 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="20dp"
         android:layout_weight="1">
 
         <ImageButton
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageButton"
-            android:layout_weight="1" />
+            android:layout_height="match_parent"
+            android:id="@+id/btnBlack"
+            android:layout_weight="1"
+            android:src="@drawable/black3"
+            android:clickable="false"
+            android:scaleType="fitCenter"
+            android:padding="0sp"
+            android:longClickable="false"
+            android:background="@null"
+            android:layout_gravity="center_horizontal" />
 
         <ImageButton
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageButton2"
-            android:layout_weight="1" />
+            android:layout_height="match_parent"
+            android:id="@+id/btnBlue"
+            android:layout_weight="1"
+            android:src="@drawable/blue_icon"
+            android:scaleType="fitCenter"
+            android:padding="0sp"
+            android:background="@null"
+            android:layout_gravity="center_horizontal" />
 
         <ImageButton
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageButton3"
-            android:layout_weight="1" />
+            android:layout_height="match_parent"
+            android:id="@+id/btnGreen"
+            android:layout_weight="1"
+            android:src="@drawable/green_icon"
+            android:scaleType="fitCenter"
+            android:padding="0sp"
+            android:background="@null"
+            android:layout_gravity="center_horizontal" />
 
         <ImageButton
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageButton4"
-            android:layout_weight="1" />
+            android:layout_height="match_parent"
+            android:id="@+id/btnYellow"
+            android:layout_weight="1"
+            android:src="@drawable/yellow_icon"
+            android:scaleType="fitCenter"
+            android:padding="0sp"
+            android:background="@null"
+            android:layout_gravity="center_horizontal" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/btnRed"
+            android:layout_weight="1"
+            android:src="@drawable/red_icon1"
+            android:scaleType="fitCenter"
+            android:padding="0sp"
+            android:background="@null"
+            android:layout_gravity="center_horizontal" />
     </LinearLayout>
 
-    <EditText
+    <!--<EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/editText2"
         android:layout_gravity="center_horizontal"
-        android:lines="12" />
+        android:lines="12" />-->
+    <com.app.hyuna.project1.CustomView
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:id="@+id/myView"/>
+        <!--android:layout_weight="1"-->
 
     <LinearLayout
         android:orientation="vertical"
