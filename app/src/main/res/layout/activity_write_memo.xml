@@ -33,7 +33,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editText"
+            android:id="@+id/edtTitle"
             android:layout_weight="10" />
 
         <TextView
@@ -46,7 +46,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText2"
+        android:id="@+id/edtMemo"
         android:layout_gravity="center_horizontal"
         android:lines="16" />
 
@@ -60,7 +60,7 @@
             android:layout_width="108dp"
             android:layout_height="wrap_content"
             android:text="Save"
-            android:id="@+id/button3"
+            android:id="@+id/btnSave"
             android:layout_gravity="center"
             android:textColor="@color/second"
             android:background="#ffffff" />

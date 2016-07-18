@@ -29,9 +29,9 @@ public class WriteDrawActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_write_draw);
         setTitle("Drawing Memo");
+
         customView = (CustomView)findViewById(R.id.myView);
         customView.setMcontext(WriteDrawActivity.this);
-
 
 
 

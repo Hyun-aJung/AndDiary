@@ -64,7 +64,7 @@ public class ListActivity extends TabActivity{
             public void onClick(View view) {
                 Intent intent = new Intent(ListActivity.this,WriteMemoActivity.class);
                 intent.putExtra("userId",userId);
-                startActivity(intent);
+                startActivityForResult(intent,0);
             }
         });
 

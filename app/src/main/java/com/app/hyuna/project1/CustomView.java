@@ -12,7 +12,7 @@ import java.util.ArrayList;
 /**
  * Created by 4강의실 on 2016-07-15.
  */
-class CustomView extends android.view.View{
+public class CustomView extends android.view.View{
     private Context mcontext = null;
     private Paint paint = null;
     ArrayList<Point> points = new ArrayList<Point>();
