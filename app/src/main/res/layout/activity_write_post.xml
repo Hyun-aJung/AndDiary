@@ -3,11 +3,13 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textView23"
-        android:layout_weight="1" />
+        android:text="Choose Date"
+        android:id="@+id/btnDate"
+        android:background="@null"
+        android:textColor="@color/second" />
 
     <LinearLayout
         android:orientation="horizontal"

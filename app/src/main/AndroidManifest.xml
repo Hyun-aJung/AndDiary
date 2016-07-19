@@ -26,7 +26,8 @@
 
         <activity android:name=".WriteMemoActivity"/>
         <activity android:name=".WriteDrawActivity"/>
-        <activity android:name=".WritePostActivity"/>
+        <activity android:name=".WritePostActivity"
+            android:theme="@style/Theme.AppCompat" />
         <activity android:name=".ChooseImageActivity"/>
     </application>
 
