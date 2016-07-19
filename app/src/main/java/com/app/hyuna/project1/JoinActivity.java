@@ -2,12 +2,20 @@ package com.app.hyuna.project1;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Paint;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.apache.http.client.*;
+
 
 /**
  * Created by 4강의실 on 2016-07-11.
@@ -103,4 +111,39 @@ public class JoinActivity extends Activity {
         });
 
     }
+    class MemberJoinJson extends AsyncTask<String,Void,String>{
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String jsonData="";
+            HttpURLConnection urlConnection = null;
+            try{
+                URL url = new URL(URLSetting.url);
+                urlConnection = (HttpURLConnection)url.openConnection();
+                urlConnection.connect();
+                //HttpGet
+
+            }catch (MalformedURLException e){
+                e.getStackTrace();
+            }catch (IOException e){
+                e.getStackTrace();
+            }catch (Exception e){
+                e.getStackTrace();
+            }
+            /*try{
+                DefaultHttpClient httpClient = new DefaultHttpClient();
+            }catch(UnsupportedEncodingException e){
+                e.getStackTrace();
+            }catch (IOException e){
+                e.getStackTrace();
+            }*/
+            return jsonData;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+        }
+    }
+
 }

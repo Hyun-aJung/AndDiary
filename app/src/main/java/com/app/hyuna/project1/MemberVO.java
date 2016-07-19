@@ -8,7 +8,7 @@ import java.util.Date;
 public class MemberVO {
     private String name;
     private String Id;
-    private String email;//이메일 형식 있었던 것 같은데
+    private String email;
     private String pw;
     private Date date;
 
@@ -51,4 +51,25 @@ public class MemberVO {
     public void setDate(Date date) {
         this.date = date;
     }
+
+    public MemberVO(String name, String id, String email, String pw, Date date) {
+        this.name = name;
+        Id = id;
+        this.email = email;
+        this.pw = pw;
+        this.date = date;
+    }
+
+
+    @Override
+    public String toString() {
+        return "MemberVO{" +
+                "name='" + name + '\'' +
+                ", Id='" + Id + '\'' +
+                ", email='" + email + '\'' +
+                ", pw='" + pw + '\'' +
+                ", date=" + date +
+                '}';
+    }
+
 }
