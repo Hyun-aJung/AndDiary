@@ -25,17 +25,13 @@ public class WidgetMain extends AppWidgetProvider {
 
     private PendingIntent buildActivityIntent(Context context){
         Intent intent = new Intent(context, WidgetActivity.class);
-        Log.d("!!!!!!!!!","00013");
         PendingIntent pi = PendingIntent.getActivity(context,0,intent,0);
-        Log.d("!!!!!!!!!","00014");
         return  pi;
     }
 
     private RemoteViews buildViews(Context context){
         RemoteViews views = new RemoteViews(context.getPackageName(),R.layout.activity_widget_layout);
-        Log.d("!!!!!!!!!","00011");
         views.setOnClickPendingIntent(R.id.widgetMemo,buildActivityIntent(context));
-        Log.d("!!!!!!!!!","00012");
         return views;
 
     }
