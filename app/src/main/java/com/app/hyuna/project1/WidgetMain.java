@@ -17,8 +17,11 @@ public class WidgetMain extends AppWidgetProvider {
         final int N = appWidgetIds.length;
 
         for(int i=0; i<N; i++){
+            //TODO 위젯 생성 전, 메모 리스트창 뜨고 선택하면 그 내용으로 위젯 만들어짐
             int appWidgetId = appWidgetIds[i];
             RemoteViews views = buildViews(context);
+            views.setTextViewText(R.id.widgetTitle,"title");
+            views.setTextViewText(R.id.widgetMemo,"memo");
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }
     }
@@ -31,7 +34,7 @@ public class WidgetMain extends AppWidgetProvider {
 
     private RemoteViews buildViews(Context context){
         RemoteViews views = new RemoteViews(context.getPackageName(),R.layout.activity_widget_layout);
-        views.setOnClickPendingIntent(R.id.widgetMemo,buildActivityIntent(context));
+        views.setOnClickPendingIntent(R.id.widgetLayout,buildActivityIntent(context));
         return views;
 
     }
