@@ -89,5 +89,10 @@ public class ListActivity extends TabActivity{
         });
         //TODO tabSet
 
+
+        //TODO memo는 customListview 해서 title, memo 차례대로 보여주자
+        //TODO 스크롤뷰 해서 전체db갯수 count한다음에 tablelayoutg. 3으로 나눈만큼 tablerow생성해서 Post,Draw 보여줌
+
+
     }
 }

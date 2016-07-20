@@ -16,10 +16,16 @@
         <activity android:name=".IntroActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <receiver android:name="WidgetMain">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget"/>
+        </receiver>
+
         <activity android:name=".MainActivity"/>
         <activity android:name=".LoginActivity"/>
         <activity android:name=".JoinActivity"/>
@@ -31,6 +37,7 @@
         <activity android:name=".WritePostActivity"
         android:theme="@style/Theme.AppCompat" />
         <activity android:name=".ChooseImageActivity"/>
+        <activity android:name=".WidgetActivity"/>
     </application>
 
 
