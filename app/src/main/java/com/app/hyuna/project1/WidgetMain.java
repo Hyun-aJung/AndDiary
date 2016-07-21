@@ -20,12 +20,26 @@ public class WidgetMain extends AppWidgetProvider {
             //TODO 위젯 생성 전, 메모 리스트창 뜨고 선택하면 그 내용으로 위젯 만들어짐
             int appWidgetId = appWidgetIds[i];
             RemoteViews views = buildViews(context);
-            views.setTextViewText(R.id.widgetTitle,"title");
-            views.setTextViewText(R.id.widgetMemo,"memo");
             appWidgetManager.updateAppWidget(appWidgetId, views);
+            //appWidgetManager.partiallyUpdateAppWidget(appWidgetId, views);
+
+
+            views.setTextViewText(R.id.widgetTitle,"title");
+            //views.setTextViewText(R.id.widgetMemo,"memo");
+
         }
     }
 
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        //super.onReceive(context, intent);
+        //intent.getStringExtra()
+        String action  = intent.getAction();
+    }
+
+    //static void updateWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId){
+
+   // }//새로 만들었어
     private PendingIntent buildActivityIntent(Context context){
         Intent intent = new Intent(context, WidgetActivity.class);
         PendingIntent pi = PendingIntent.getActivity(context,0,intent,0);

@@ -74,6 +74,7 @@ public class ListActivity extends TabActivity{
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ListActivity.this,WriteDrawActivity.class);
+                //Intent intent = new Intent(ListActivity.this,CustomWidgetMemoListActivity.class);
                 intent.putExtra("userId",userId);
                 startActivity(intent);
             }

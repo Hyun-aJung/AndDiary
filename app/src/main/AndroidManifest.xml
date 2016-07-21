@@ -38,6 +38,7 @@
         android:theme="@style/Theme.AppCompat" />
         <activity android:name=".ChooseImageActivity"/>
         <activity android:name=".WidgetActivity"/>
+        <activity android:name="CustomWidgetMemoListActivity"/>
     </application>
 
 
