@@ -4,12 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 /**
  * Created by 4강의실 on 2016-07-15.
@@ -19,6 +22,7 @@ public class GridViewImg extends BaseAdapter {
     private Integer[] mImg = {R.drawable.default_img,R.drawable.default_img,R.drawable.default_img
                                 ,R.drawable.default_img,R.drawable.default_img}; //5개 이미지
     private Bitmap[] bitImg = new Bitmap[5];
+    int x,y;
 
     public GridViewImg(Context c){
         mContext = c;
@@ -36,6 +40,10 @@ public class GridViewImg extends BaseAdapter {
     @Override
     public long getItemId(int i) {
         return 0;
+    }
+    public void setDisplaySize(int x, int y){
+        this.x = x;
+        this.y = y;
     }
 
     public Integer[] setImg(Integer[] img){  //이미지를 받아오기 위해
@@ -62,9 +70,13 @@ public class GridViewImg extends BaseAdapter {
         ImageView imgView;
         if(view==null){
             imgView = new ImageView(mContext);
-            imgView.setLayoutParams(new GridView.LayoutParams(85,85));
+            //Display display = getWindowManager().getDefaultDisplay();
+            imgView.setLayoutParams(new GridView.LayoutParams(x/6,y/6));
             imgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imgView.setPadding(2,2,2,2);
+            imgView.setPadding(0,0,0,0);
+            /*imgView.setLayoutParams(new GridView.LayoutParams(85,85));
+            imgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imgView.setPadding(2,2,2,2);*/
         }else{
             imgView = (ImageView)view;
         }

@@ -2,11 +2,16 @@ package com.app.hyuna.project1;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -57,10 +62,18 @@ public class WritePostActivity extends Activity {
         btnDate = (Button) findViewById(R.id.btnDate);
 
         edtTitle.isFocused();
+        DisplayMetrics displayMetrics = new DisplayMetrics();//Display size구해서 이쁘게 배치할거야 이미지
+        WindowManager windowManager = (WindowManager)getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+        windowManager.getDefaultDisplay().getMetrics(displayMetrics);
+        int deviceWidth = displayMetrics.widthPixels;
+
+        GridViewImg grid = new GridViewImg(this);
+        grid.setDisplaySize(deviceWidth,deviceWidth);
 
         //default 로 gridView 에 default 이미지만 보여줌
-        gridView.setAdapter(new GridViewImg(this));
+        gridView.setAdapter(grid);//new GridViewImg(this));
 
+        edtMemo.setHint("메모를 입력하세요");
         btnNew.setOnClickListener(new View.OnClickListener() {//+버튼 클릭시
             @Override
             public void onClick(View view) {
@@ -76,10 +89,17 @@ public class WritePostActivity extends Activity {
                 memo = edtMemo.getText().toString();
                 if (memoTitle == null) {
                     Toast.makeText(getApplicationContext(), "제목을 입력하세요.", Toast.LENGTH_SHORT).show();
-                } else if (false) {//추가할 이미지가 없을 떄
+                }else if (false) {//추가할 이미지가 없을 떄
                     //TODO title, memo 없으면 입력하라하고 image 없으면 이미지는 저장하지 않고 DB저장
                     //TODO defalt 이미지 제외하고 추가한 이미지만 DB에 저장한다
                 } else {
+                    if(btnDate.getText().toString().equals("Choose Date")){ //날짜 선택 안했으면 현재 날짜로 자동 setting
+                        long now = System.currentTimeMillis();
+                        Date date = new Date(now);
+                        SimpleDateFormat fFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+                        String fNow = fFormat.format(date);
+                        btnDate.setText(fNow);
+                    }
                     Intent intent = new Intent(WritePostActivity.this, ListActivity.class);
                     intent.putExtra("userId", userId);
                     //intent.putExtra("list",POST);

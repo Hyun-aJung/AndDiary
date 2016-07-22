@@ -45,28 +45,70 @@ public class JoinActivity extends Activity {
         btCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                int count = 0;
                 //TODO 아이디 중복확인(primary Key)
                 //if ID 유일하다면 idCheck=true;
+                if(count<=0){
+                    idCheck = true;
+                    Toast.makeText(getApplicationContext(),"사용 가능한 ID입니다",Toast.LENGTH_SHORT).show();
+                }else idCheck = false;
+
+                if(pwCheck && nameCheck && idCheck && mailCheck){ //모든칸 잘 되었으면 Join버튼 클릭 가능(회원가입 가능)
+                    btJoin.setEnabled(true);
+                }else btJoin.setEnabled(false);
             }
         });
+        txtPw1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(!txtPw1.hasFocus()){
+                    p1 = txtPw1.getText().toString();
+                    p2 = txtPw2.getText().toString();
+                    if (p1.equals(p2) && !p1.equals("")) pwCheck = true;
+                    else pwCheck = false;
+                }
+                if(pwCheck && nameCheck && idCheck && mailCheck){ //모든칸 잘 되었으면 Join버튼 클릭 가능(회원가입 가능)
+                    btJoin.setEnabled(true);
+                }else btJoin.setEnabled(false);
 
+            }
+        });
         txtPw2.setOnFocusChangeListener(new View.OnFocusChangeListener() { //비밀번호 확인 check
             @Override
             public void onFocusChange(View view, boolean b) {
                 if(!txtPw2.hasFocus()) {
                     p1 = txtPw1.getText().toString();
                     p2 = txtPw2.getText().toString();
-                    if (p1.equals(p2)){
-                        btJoin.setEnabled(true);
-                        pwCheck = true;
-                    }
+                    if (p1.equals(p2)) pwCheck = true;
                     else{
                         Toast.makeText(getApplicationContext(),"비밀번호가 틀려요!",Toast.LENGTH_SHORT).show();
                         txtPw2.setText("");
                         txtPw2.isFocused();
+                        pwCheck = false;
                     }
+
+                    if(pwCheck && nameCheck && idCheck && mailCheck){ //모든칸 잘 되었으면 Join버튼 클릭 가능(회원가입 가능)
+                        btJoin.setEnabled(true);
+                    }else btJoin.setEnabled(false);
                 }
+            }
+        });
+
+        txtName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(!txtName.hasFocus()){
+                    Toast.makeText(getApplicationContext(),"이름 focus out",Toast.LENGTH_SHORT).show();
+                    if(txtName.getText().toString().equals("")){
+                        Toast.makeText(getApplicationContext(),"이름 빈칸임",Toast.LENGTH_SHORT).show();
+                        nameCheck = false;
+                    }else nameCheck = true;
+
+                    if(pwCheck && nameCheck && idCheck && mailCheck){ //모든칸 잘 되었으면 Join버튼 클릭 가능(회원가입 가능)
+                        btJoin.setEnabled(true);
+                    }else btJoin.setEnabled(false);
+                }
+
             }
         });
 
@@ -76,19 +118,19 @@ public class JoinActivity extends Activity {
             public void onFocusChange(View view, boolean b) {
                 if(!txtMail.hasFocus()){
                     mail = txtMail.getText().toString();
-                    mailCheck = mail.contains("@"); //mail에 @이 포함되있는가
-
+                    if(mail.contains("@")) mailCheck=true; //mail에 @이 포함되있는가
+                    else mailCheck=false;
                     if(mailCheck==false){
                         Toast.makeText(getApplicationContext(),"이메일 형식이 올바르지 않습니다.",Toast.LENGTH_SHORT).show();
                         txtMail.isFocused();
                     }
+
+                    if(pwCheck && nameCheck && idCheck && mailCheck){ //모든칸 잘 되었으면 Join버튼 클릭 가능(회원가입 가능)
+                        btJoin.setEnabled(true);
+                    }else btJoin.setEnabled(false);
                 }
             }
         });
-
-        if(pwCheck && nameCheck && idCheck && mailCheck){ //모든칸 잘 되었으면 Join버튼 클릭 가능(회원가입 가능)
-            btJoin.setEnabled(true);
-        }
 
         btJoin.setOnClickListener(new View.OnClickListener() {//회원가입 버튼 눌렀을 때
             @Override

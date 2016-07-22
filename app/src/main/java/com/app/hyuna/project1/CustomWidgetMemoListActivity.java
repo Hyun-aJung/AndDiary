@@ -1,8 +1,11 @@
 package com.app.hyuna.project1;
 
 import android.app.Activity;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -30,7 +33,7 @@ public class CustomWidgetMemoListActivity extends Activity{
         adapter.add(temp);
 
         tempTitle = "hi title2";
-        tempMemo = "hi Memo2";
+        tempMemo = "hi Memo22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222";
         temp = new CustomWidgetRow(tempTitle,tempMemo);
         adapter.add(temp);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -40,15 +43,12 @@ public class CustomWidgetMemoListActivity extends Activity{
                 widgetTitle = adapter.getItem(position).getTitle();
                 widgetMemo = adapter.getItem(position).getMemo();
                 CustomWidgetRow tempWidget = new CustomWidgetRow(widgetTitle,widgetMemo);
-                Intent intent = new Intent(getApplicationContext(),WidgetMain.class);
+                Intent intent = new Intent(getApplicationContext(),WidgetActivity.class);
                 intent.putExtra("tempTitle",tempWidget.getTitle());
                 intent.putExtra("tempMemo",tempWidget.getMemo());
-                startActivity(intent);
+                setResult(RESULT_OK,intent);
                 finish();
-                //idgetMain wid = new WidgetMain();
-                //wid.onUpdate(this,);
             }
         });
-
     }
 }

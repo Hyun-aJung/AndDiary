@@ -24,7 +24,8 @@
         android:text="Choose Date"
         android:id="@+id/btnDate"
         android:background="@null"
-        android:textColor="@color/second" />
+        android:textColor="@color/second"
+        android:layout_weight="1" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -52,7 +53,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/edtTitle"
-            android:layout_weight="10" />
+            android:layout_weight="10"
+            android:textColor="#000000" />
 
         <TextView
             android:layout_width="38dp"
@@ -85,7 +87,8 @@
                 android:layout_height="match_parent"
                 android:id="@+id/gridView"
                 android:numColumns="5"
-                android:horizontalSpacing="1dp" />
+                android:horizontalSpacing="1dp"
+                android:layout_gravity="center" />
         </LinearLayout>
     </LinearLayout>
 
@@ -93,7 +96,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/edtMemo"
-        android:lines="12" />
+        android:lines="12"
+        android:layout_weight="2"
+        android:textColor="#000000"
+        android:textColorHint="@android:color/darker_gray" />
 
     <LinearLayout
         android:orientation="vertical"

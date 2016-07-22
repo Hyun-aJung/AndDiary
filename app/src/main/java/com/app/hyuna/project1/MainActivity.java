@@ -1,13 +1,17 @@
 package com.app.hyuna.project1;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 public class MainActivity extends Activity {
@@ -25,6 +29,12 @@ public class MainActivity extends Activity {
         btnDraw =  (ImageButton) findViewById(R.id.btnDraw);
         btnPost =  (ImageButton) findViewById(R.id.btnPost);
         btnSet  =  (ImageButton) findViewById(R.id.btnSet);
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();//Display size구해서 이쁘게 배치할거야 버튼
+        WindowManager windowManager = (WindowManager)getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+        windowManager.getDefaultDisplay().getMetrics(displayMetrics);
+        int deviceWidth = displayMetrics.widthPixels;
+        int deviceHeight = displayMetrics.heightPixels;
 
         btnShort.setOnClickListener(new View.OnClickListener() {
             @Override
