@@ -24,17 +24,18 @@ public class WidgetActivity extends Activity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_widget_layout);
+        //setContentView(R.layout.activity_widget_layout);
         Context mContext;
         mContext = getApplicationContext();
-        Log.d("????????","hi");
         Intent intent = new Intent(getApplicationContext(),CustomWidgetMemoListActivity.class);
-        startActivityForResult(intent,0);
+        startActivity(intent);
+        finish();
+        //startActivityForResult(intent,0);
 
 //        this.finish();
     }
 
-    @Override
+    /*@Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode==RESULT_OK){
             title = data.getStringExtra("tempTitle");
@@ -46,28 +47,7 @@ public class WidgetActivity extends Activity{
             this.finish();
 
         }
-    }
-
-   /* @Override//강사님 코드
-    protected void onCreate(Bundle savedInstanceState) {
-
-
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_widget_layout);
-        Context mContext;
-        mContext = getApplicationContext();
-        Intent intent;
-        try{
-            PackageManager pm = getPackageManager();
-            pm.getPackageInfo(CHECK_PLAY_PACKAGE_NAME.trim(),PackageManager.GET_META_DATA);
-            intent = mContext.getPackageManager().getLaunchIntentForPackage("com.app.hyuna.project1");
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//setFlages
-        }catch (PackageManager.NameNotFoundException e){
-            intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps"));//https://play.google.com/store/apps/details?id=kr.co.pooq.android.tablet.v2"
-            intent.setPackage("com.android.vending");//이건 뭔의미고?
-        }
-        startActivity(intent);
-        this.finish();
     }*/
+
 
 }

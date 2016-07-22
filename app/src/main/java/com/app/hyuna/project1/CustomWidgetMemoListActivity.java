@@ -3,7 +3,9 @@ package com.app.hyuna.project1;
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -32,22 +34,34 @@ public class CustomWidgetMemoListActivity extends Activity{
         CustomWidgetRow temp = new CustomWidgetRow(tempTitle,tempMemo);
         adapter.add(temp);
 
-        tempTitle = "hi title2";
-        tempMemo = "hi Memo22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222";
+        tempTitle = "오늘은";
+        tempMemo = "뇽이부기랑 데이트하는날~♥3 ♥";
         temp = new CustomWidgetRow(tempTitle,tempMemo);
         adapter.add(temp);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 //TODO 위젯 ㄱㄱ으로 연동
-                widgetTitle = adapter.getItem(position).getTitle();
+                SharedPreferences sp = getSharedPreferences("sp", Context.MODE_WORLD_WRITEABLE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putString("ListGetTitle",adapter.getItem(position).getTitle());
+                editor.putString("ListGetMemo",adapter.getItem(position).getMemo());
+                editor.commit();
+
+                Intent intent = new Intent(getApplicationContext(),WidgetMain.class);
+                intent.setAction("android.appwidget.action.APPWIDGET_UPDATE");
+                sendBroadcast(intent);
+                finish();
+;
+
+                /*widgetTitle = adapter.getItem(position).getTitle();
                 widgetMemo = adapter.getItem(position).getMemo();
                 CustomWidgetRow tempWidget = new CustomWidgetRow(widgetTitle,widgetMemo);
                 Intent intent = new Intent(getApplicationContext(),WidgetActivity.class);
                 intent.putExtra("tempTitle",tempWidget.getTitle());
                 intent.putExtra("tempMemo",tempWidget.getMemo());
                 setResult(RESULT_OK,intent);
-                finish();
+                finish();*/
             }
         });
     }

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -66,6 +67,7 @@ public class ChooseImageActivity extends Activity{
 
         // 쿼리 수행
         Cursor imageCursor = managedQuery(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null, null, MediaStore.Images.Media.DATE_ADDED + " desc ");
+        //Cursor imageCursor = managedQuery(Uri.parse("/data/data/"), projection, null, null, MediaStore.Images.Media.DATE_ADDED + " desc ");
 
         if (imageCursor != null && imageCursor.getCount() > 0) {
             // 컬럼 인덱스
@@ -182,12 +184,11 @@ public class ChooseImageActivity extends Activity{
             });
 
             btnOk = (Button)findViewById(R.id.btnOK);
-//        btnCancel = (Button)findViewById(R.id.btnCancel);
+            btnCancel = (Button)findViewById(R.id.btnCancel);
 
             btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //gridView = (GridView)(R.layout.activity_list_post)findViewById(R.id.gridView);
                 Intent mintent = new Intent(getApplicationContext(),WritePostActivity.class);
                 int count=0;
                 for(int i=0;i<mArrData.size();i++) {
@@ -207,16 +208,21 @@ public class ChooseImageActivity extends Activity{
                         String temp = "pic"+count;
                         mintent.putExtra(temp, "0");
                         count++;
-                        Log.d("??????????","null");
                     }
                 }
 
                 setResult(RESULT_OK,mintent);
                 finish();
-
-            }
-        });
-            Log.d("??????????","!!!!!!!");
+                }
+            });
+            btnCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent mIntent = new Intent(getApplicationContext(),WritePostActivity.class);
+                    setResult(RESULT_CANCELED,mIntent);
+                    finish();
+                }
+            });
             return convertView;
         }
     }
