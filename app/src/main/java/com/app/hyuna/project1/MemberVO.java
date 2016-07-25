@@ -52,12 +52,17 @@ public class MemberVO {
         this.date = date;
     }
 
-    public MemberVO(String name, String id, String email, String pw, Date date) {
+    public MemberVO(String id, String pw, String name, String email, Date date) {
         this.name = name;
         Id = id;
         this.email = email;
         this.pw = pw;
         this.date = date;
+    }
+    public MemberVO( String id, String name, String email) {
+        this.name = name;
+        Id = id;
+        this.email = email;
     }
 
 

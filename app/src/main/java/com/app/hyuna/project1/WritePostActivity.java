@@ -33,6 +33,7 @@ public class WritePostActivity extends Activity {
     Button btnNew, btnSave, btnDate;
     GridView gridView;
     String memoTitle, memo, userId;
+    int listNum;
     final int MEMO = 0, DRAW = 1, POST = 2, SET = 3;
     String[] tempImg = {"0", "0", "0", "0", "0"};
 
@@ -53,6 +54,10 @@ public class WritePostActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_write_post);
         setTitle("Postscript");
+
+        Intent intent = getIntent();
+        userId = intent.getExtras().getString("userId");
+        listNum = intent.getExtras().getInt("list");//intent로 보낸 데이터 받기
 
         edtTitle = (EditText) findViewById(R.id.edtTitle);
         edtMemo = (EditText) findViewById(R.id.edtMemo);
@@ -102,7 +107,7 @@ public class WritePostActivity extends Activity {
                     }
                     Intent intent = new Intent(WritePostActivity.this, ListActivity.class);
                     intent.putExtra("userId", userId);
-                    //intent.putExtra("list",POST);
+                    intent.putExtra("list",POST);
                     startActivity(intent);
                     finish();
                 }
