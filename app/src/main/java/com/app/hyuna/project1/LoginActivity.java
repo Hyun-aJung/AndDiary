@@ -56,16 +56,7 @@ public class LoginActivity extends Activity {
                 pw = userPw.getText().toString();
 
                 LoginTask = new LoginTask().execute(id,pw);
-                if(loginOk) {
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    SaveMember save = new SaveMember(id);
-                    save.saveMemberJson();
-                    intent.putExtra("userId",id);//TODO 없애
-                    startActivity(intent);
-                    finish();
-                }else{
-                    Toast.makeText(getApplicationContext(),"아이디 또는 비밀번호가 틀려요!",Toast.LENGTH_SHORT).show();
-                }
+
             }
         });
 
@@ -82,6 +73,16 @@ public class LoginActivity extends Activity {
             if(str>0){
                 Toast.makeText(getApplicationContext(),"로그인 성공!",Toast.LENGTH_SHORT).show();
                 loginOk=true;
+            }
+            if(loginOk) {
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                SaveMember save = new SaveMember(id);
+                save.saveMemberJson();
+                intent.putExtra("userId",id);//TODO 없애
+                startActivity(intent);
+                finish();
+            }else{
+                Toast.makeText(getApplicationContext(),"아이디 또는 비밀번호가 틀려요!",Toast.LENGTH_SHORT).show();
             }
         }
     }

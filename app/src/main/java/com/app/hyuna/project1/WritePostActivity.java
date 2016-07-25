@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
@@ -20,6 +21,7 @@ import android.widget.GridView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -186,6 +188,18 @@ public class WritePostActivity extends Activity {
             GridViewImg grid = new GridViewImg(this);
             grid.setBitImg(tempImg);
             gridView.setAdapter(grid);
+        }
+    }
+
+    private class WritePostTask extends AsyncTask<String, Void, String>{
+        @Override
+        protected String doInBackground(String... strings) {
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
         }
     }
 }

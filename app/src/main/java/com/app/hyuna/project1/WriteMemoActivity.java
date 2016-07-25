@@ -55,14 +55,8 @@ public class WriteMemoActivity extends Activity {
                 if(title==""){
                     Toast.makeText(getApplicationContext(),"제목을 입력하세요",Toast.LENGTH_SHORT).show();
                 }else{
-                //TODO DB에 저장
                     task = new WriteMemoTask().execute(userId,title,memo);
 
-                    Intent intent = new Intent(WriteMemoActivity.this,ListActivity.class);
-                    intent.putExtra("userId",userId);
-                    intent.putExtra("list",MEMO);
-                    startActivity(intent);
-                    finish();
                 }
             }
         });
@@ -81,6 +75,12 @@ public class WriteMemoActivity extends Activity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+
+            Intent intent = new Intent(WriteMemoActivity.this,ListActivity.class);
+            intent.putExtra("userId",userId);
+            intent.putExtra("list",MEMO);
+            startActivity(intent);
+            finish();
         }
     }
 
@@ -99,13 +99,24 @@ public class WriteMemoActivity extends Activity {
             buffer.append("id").append("=").append(userId).append("&");
             buffer.append("title").append("=").append(title).append("&");
             buffer.append("memo").append("=").append(memo);
-            Log.d("!!!!!!!!","id : "+userId+", title : " + title+", memo : "+memo);
+
+            Log.d("!!!!!!!",userId+", "+title+", "+memo);
             OutputStreamWriter outStream = new OutputStreamWriter(http.getOutputStream(),"UTF-8");
             PrintWriter writer = new PrintWriter(outStream);
             writer.write(buffer.toString());
-            Log.d("Buffer :","Buffer :" + buffer.toString());
             writer.flush();
 
+            InputStreamReader tmp = new InputStreamReader(
+                    http.getInputStream(), "UTF-8");
+            BufferedReader reader = new BufferedReader(tmp);
+            StringBuilder builder = new StringBuilder();
+            String str;
+            while ((str = reader.readLine()) != null) {
+                builder.append(str + "\n");
+            }
+            String myResult = builder.toString();
+
+            Log.d("result", "result : " + myResult);
         } catch (MalformedURLException e) {
             //
         } catch (IOException e) {
