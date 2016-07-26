@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
@@ -21,7 +22,18 @@ import android.widget.GridView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.DataOutput;
+import java.io.DataOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -38,7 +50,7 @@ public class WritePostActivity extends Activity {
     int listNum;
     final int MEMO = 0, DRAW = 1, POST = 2, SET = 3;
     String[] tempImg = {"0", "0", "0", "0", "0"};
-
+    AsyncTask<?,?,?> task;
     GregorianCalendar calendar;
     Date d;
     int year1, month1, day1, check = 2;
@@ -48,6 +60,7 @@ public class WritePostActivity extends Activity {
     TimePicker timePicker;
     FrameLayout dateLayout, timeLayout;
 
+    String fNow;
     AlertDialog.Builder dlg;
 
 
@@ -94,6 +107,8 @@ public class WritePostActivity extends Activity {
             public void onClick(View view) {
                 memoTitle = edtTitle.getText().toString();
                 memo = edtMemo.getText().toString();
+                //sMemo = memo;
+                //sTitle = memoTitle;//async에서 쓸변수
                 if (memoTitle == null) {
                     Toast.makeText(getApplicationContext(), "제목을 입력하세요.", Toast.LENGTH_SHORT).show();
                 }else if (false) {//추가할 이미지가 없을 떄
@@ -104,9 +119,11 @@ public class WritePostActivity extends Activity {
                         long now = System.currentTimeMillis();
                         Date date = new Date(now);
                         SimpleDateFormat fFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-                        String fNow = fFormat.format(date);
+                        fNow = fFormat.format(date);
                         btnDate.setText(fNow);
+                        //sDate = fNow;//async에서 쓸 변수
                     }
+                    task = new WritePostTask().execute(userId,fNow,memoTitle,memo,tempImg[0]);
                     Intent intent = new Intent(WritePostActivity.this, ListActivity.class);
                     intent.putExtra("userId", userId);
                     intent.putExtra("list",POST);
@@ -191,15 +208,103 @@ public class WritePostActivity extends Activity {
         }
     }
 
-    private class WritePostTask extends AsyncTask<String, Void, String>{
-        @Override
-        protected String doInBackground(String... strings) {
-            return null;
+//http://blog.naver.com/legendx/40132716891 따라하는중
+    //https://www.simplifiedcoding.net/android-upload-image-to-server-using-php-mysql/ 참고햅
+    //http://titis.tistory.com/48
+    private class WritePostTask extends AsyncTask<String, Void, Void> {
+    String noResult;
+
+
+    @Override
+    protected Void doInBackground(String... strings) {
+            try {
+                URL url = new URL("http://hyunazi.dothome.co.kr/AndDiary/get_no.php");
+                HttpURLConnection http = (HttpURLConnection) url.openConnection();
+                http.setDefaultUseCaches(false);
+                http.setDoInput(true);
+                http.setDoOutput(true);
+                http.setRequestMethod("POST");
+
+                http.setRequestProperty("content-type","application/x-www-form-urlencoded");
+
+                OutputStreamWriter outStream = new OutputStreamWriter(http.getOutputStream(), "UTF-8");
+                PrintWriter writer = new PrintWriter(outStream);
+                StringBuffer buffer = new StringBuffer();
+                buffer.append("id").append("=").append(userId);
+                writer.write(buffer.toString());
+                writer.flush();
+
+                InputStreamReader tmp = new InputStreamReader(
+                        http.getInputStream(), "UTF-8");
+                BufferedReader reader = new BufferedReader(tmp);
+                StringBuilder builder = new StringBuilder();
+                String str;
+                while ((str = reader.readLine()) != null) {
+                    builder.append(str + "\n");
+                }
+                noResult = builder.toString();
+
+                Log.d("resultNo", "result : " + noResult);
+            } catch (MalformedURLException e) {
+                //
+            } catch (IOException e) {
+                //
+            }
+
+            try {
+            URL url = new URL("http://hyunazi.dothome.co.kr/AndDiary/write_post.php");
+            String boundary = "!";
+            URLConnection con = url.openConnection();
+            con.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+            con.setDoOutput(true);
+
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.writeBytes("\r\n--" + boundary + "\r\n");
+            wr.writeBytes("Content-Disposition: form-data; name=\"id\"\r\n\r\n" + strings[0]);
+
+            wr.writeBytes("\r\n--" + boundary + "\r\n");
+            wr.writeBytes("Content-Disposition: form-data; name=\"date\"\r\n\r\n" + strings[1]);
+
+            wr.writeBytes("\r\n--" + boundary + "\r\n");
+            wr.writeBytes("Content-Disposition: form-data; name=\"title\"\r\n\r\n" + strings[2]);
+
+            wr.writeBytes("\r\n--" + boundary + "\r\n");
+            wr.writeBytes("Content-Disposition: form-data; name=\"memo\"\r\n\r\n" + strings[3]);
+
+            int SaveNo = Integer.parseInt(noResult) + 1;
+            String imgName = SaveNo + "img0.jpg";
+            //String tempLine ="Content-Disposition: form-data; name=\"img\";filename=\"img.jpg\"\r\n";
+            wr.writeBytes("\r\n--" + boundary + "\r\n");
+            wr.writeBytes("Content-Disposition: form-data; name=\"img\";filename=" + "\"" + imgName + "\"\r\n");//TODO
+            wr.writeBytes("Content-Type:  application/octet-stream\r\n\r\n");
+
+            FileInputStream fileInputStream = new FileInputStream("file:/" + strings[4]);
+            int bytesAvailable = fileInputStream.available();
+            int maxBufferSize = 1024;
+            int bufferSize = Math.min(bytesAvailable, maxBufferSize);
+            byte[] buffer = new byte[bufferSize];
+
+            int bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+            while (bytesRead > 0) {
+                DataOutputStream dataWrite = new DataOutputStream(con.getOutputStream());
+                dataWrite.write(buffer, 0, bufferSize);
+                bytesAvailable = fileInputStream.available();
+                bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+            }
+            fileInputStream.close();
+
+            wr.writeBytes("\r\n--" + boundary + "\r\n");
+            wr.flush();
+
+        } catch (MalformedURLException e) {
+            e.getStackTrace();
+        } catch (Exception e) {
+            e.getStackTrace();
         }
 
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-        }
+        return null;
     }
+}
+
 }

@@ -1,6 +1,6 @@
 package com.app.hyuna.project1;
 
-import java.util.Date;
+
 
 /**
  * Created by 4강의실 on 2016-07-18.
@@ -10,7 +10,8 @@ public class MemberVO {
     private String Id;
     private String email;
     private String pw;
-    private Date date;
+    private String date;
+
 
     public String getName() {
         return name;
@@ -44,26 +45,26 @@ public class MemberVO {
         this.pw = pw;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
-    public MemberVO(String id, String pw, String name, String email, Date date) {
+    public MemberVO(String id, String pw, String name, String email, String date) {
         this.name = name;
         Id = id;
         this.email = email;
         this.pw = pw;
         this.date = date;
     }
-    public MemberVO( String id, String name, String email) {
+    /*public MemberVO( String id, String name, String email) {
         this.name = name;
         Id = id;
         this.email = email;
-    }
+    }*/
 
 
     @Override

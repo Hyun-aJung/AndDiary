@@ -55,24 +55,28 @@ public class LoginActivity extends Activity {
                 id = userId.getText().toString();
                 pw = userPw.getText().toString();
 
-                LoginTask = new LoginTask().execute(id,pw);
+                //LoginTask = new LoginTask().execute(id,pw);
+                LoginTask = new LoginTask().execute(userId.getText().toString(),userPw.getText().toString());
 
             }
         });
 
     }
 
-    private class LoginTask extends AsyncTask<String, Void, Integer>{
+    private class LoginTask extends AsyncTask<String, Void, String>{
         @Override
-        protected Integer doInBackground(String... strings) {
+        protected String doInBackground(String... strings) {
             return HttpPostData(strings[0],strings[1]);
         }
 
         @Override
-        protected void onPostExecute(Integer str) {
-            if(str>0){
+        protected void onPostExecute(String str) {
+            if(str.equals(pw)){
                 Toast.makeText(getApplicationContext(),"로그인 성공!",Toast.LENGTH_SHORT).show();
                 loginOk=true;
+            }else{
+                Toast.makeText(getApplicationContext(),"아이디 또는 비밀번호가 틀려요!",Toast.LENGTH_SHORT).show();
+                userPw.setText("");
             }
             if(loginOk) {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -81,14 +85,12 @@ public class LoginActivity extends Activity {
                 intent.putExtra("userId",id);//TODO 없애
                 startActivity(intent);
                 finish();
-            }else{
-                Toast.makeText(getApplicationContext(),"아이디 또는 비밀번호가 틀려요!",Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    public Integer HttpPostData(String syncId, String syncPw){
-        Integer myResult=0;
+    public String HttpPostData(String syncId, String syncPw){
+        String myResult="";
         try {
             URL url = new URL(
                     "http://hyunazi.dothome.co.kr/AndDiary/login.php");
@@ -102,8 +104,7 @@ public class LoginActivity extends Activity {
             http.setRequestProperty("content-type",
                     "application/x-www-form-urlencoded");
             StringBuffer buffer = new StringBuffer();
-            buffer.append("id").append("=").append(syncId).append("&");
-            buffer.append("pw").append("=").append(syncPw);
+            buffer.append("id").append("=").append(syncId);
 
             OutputStreamWriter outStream = new OutputStreamWriter(http.getOutputStream(), "UTF-8");
             PrintWriter writer = new PrintWriter(outStream);
@@ -118,9 +119,9 @@ public class LoginActivity extends Activity {
             while ((str = reader.readLine()) != null) {
                 builder.append(str);
             }
-            myResult = Integer.parseInt(builder.toString());
+            myResult = builder.toString();
 
-            Log.d("result", "result : " + myResult);
+            Log.d("resultLogin", "result : " + myResult);
         } catch (MalformedURLException e) {
             e.getStackTrace();
         } catch (IOException e) {

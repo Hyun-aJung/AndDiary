@@ -52,7 +52,7 @@ public class WriteMemoActivity extends Activity {
             public void onClick(View view) {
                 title = edtTitle.getText().toString();
                 memo = edtMemo.getText().toString();
-                if(title==""){
+                if(title.equals("")){
                     Toast.makeText(getApplicationContext(),"제목을 입력하세요",Toast.LENGTH_SHORT).show();
                 }else{
                     task = new WriteMemoTask().execute(userId,title,memo);
@@ -65,7 +65,7 @@ public class WriteMemoActivity extends Activity {
         //TextWatcher하면 TextView한줄 글자수 제한 할 수 있음
     }
 
-    private class WriteMemoTask extends AsyncTask<String, Void,Void>{
+    private class WriteMemoTask extends AsyncTask<String, Void, Void>{
         @Override
         protected Void doInBackground(String... strings) {
             HttpPostData(strings[0],strings[1],strings[2]);
@@ -75,7 +75,7 @@ public class WriteMemoActivity extends Activity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-
+            Toast.makeText(getApplicationContext(),"회원가입 완료!",Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(WriteMemoActivity.this,ListActivity.class);
             intent.putExtra("userId",userId);
             intent.putExtra("list",MEMO);

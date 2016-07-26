@@ -82,7 +82,7 @@ public class SaveMember {
             StringBuilder builder = new StringBuilder();
             String strResult;
             while ((strResult = reader.readLine()) != null) {
-                builder.append(strResult + "\n");
+                builder.append(strResult+"\n");
             }
             myResult = builder.toString();
 
