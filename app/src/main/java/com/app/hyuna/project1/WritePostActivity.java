@@ -439,13 +439,14 @@ public class WritePostActivity extends Activity {
                     bytesRead = fis.read(buffer, 0, bufferSize);
                 }
                 fis.close();//img1끝
-/*
+
+                dos.writeBytes(lineEnd);
                 String filePath2 = strings[5];
                 int index2 = filePath2.lastIndexOf("/");
                 String fileName2 = filePath2.substring(index2+1,filePath2.length());
-
+                Log.d("!!!!!!!!!fildname",fileName2);
                 dos.writeBytes(twoHyphens+boundary+lineEnd);
-                dos.writeBytes("Content-Disposition: form-data; name=\"img2\";filename=\"" + fileName2 + "\""+lineEnd);
+                dos.writeBytes("Content-Disposition: form-data; name=\"img_\";filename=\"" + fileName2 + "\""+lineEnd);
                 dos.writeBytes(lineEnd);
 
                 FileInputStream fis2 = new FileInputStream(filePath2);
@@ -460,10 +461,10 @@ public class WritePostActivity extends Activity {
                     dataWrite.write(buffer2, 0, bufferSize2);
                     bytesAvailable2 = fis2.available();
                     bufferSize2 = Math.min(bytesAvailable2, maxBufferSize2);
-                    bytesRead2 = fis.read(buffer2, 0, bufferSize2);
+                    bytesRead2 = fis2.read(buffer2, 0, bufferSize2);
                 }
                 fis2.close();
-*/
+
                 dos.writeBytes(lineEnd);
                 dos.writeBytes(twoHyphens+boundary+twoHyphens+lineEnd);
                 dos.flush();
