@@ -177,7 +177,7 @@ public class ChooseImageActivity extends Activity{
                         mArrData.get(position).setCheckedState(false);
                     } else {
                         mArrData.get(position).setCheckedState(true);
-                        //Toast.makeText(getApplicationContext(),mArrData.get(position).getData(),Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),mArrData.get(position).getData(),Toast.LENGTH_SHORT).show();
                     }
                     mListAdapter.notifyDataSetChanged();
                 }

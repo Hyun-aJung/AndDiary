@@ -121,9 +121,23 @@ public class WritePostActivity extends Activity {
                         SimpleDateFormat fFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
                         fNow = fFormat.format(date);
                         btnDate.setText(fNow);
-                        //sDate = fNow;//async에서 쓸 변수
                     }
-                    task = new WritePostTask().execute(userId,fNow,memoTitle,memo,tempImg[0]);
+                    if(tempImg[1].equals("0")){//img1개
+                        task = new WritePostTask1().execute(userId,fNow,memoTitle,memo,tempImg[0]);
+
+                    }else if(tempImg[2].equals("0")){//img2개
+                        task = new WritePostTask2().execute(userId,fNow,memoTitle,memo,tempImg[0],tempImg[1]);
+                    }
+                    else if(tempImg[3].equals("0")){//img3개
+                        //task = new WritePostTask3().execute(userId,fNow,memoTitle,memo,tempImg[0],tempImg[1],tempImg[2]);
+                    }
+                    else if(tempImg[4].equals("0")){//img4개
+                       // task = new WritePostTask4().execute(userId,fNow,memoTitle,memo,tempImg[0],tempImg[1],tempImg[2],tempImg[3]);
+                    }else{//img5개
+                        //task = new WritePostTask5().execute(userId,fNow,memoTitle,memo,tempImg[0],tempImg[1],tempImg[2],tempImg[3],tempImg[4]);
+                    }
+                    //이미지 포함 데이터 저장 끝나면 intent
+                    Toast.makeText(getApplicationContext(),"저장되었습니다!",Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(WritePostActivity.this, ListActivity.class);
                     intent.putExtra("userId", userId);
                     intent.putExtra("list",POST);
@@ -201,7 +215,7 @@ public class WritePostActivity extends Activity {
             tempImg[2] = data.getExtras().getString("pic2");
             tempImg[3] = data.getExtras().getString("pic3");
             tempImg[4] = data.getExtras().getString("pic4");
-
+            Log.d("!!!!!!!!!temp",tempImg[1]);
             GridViewImg grid = new GridViewImg(this);
             grid.setBitImg(tempImg);
             gridView.setAdapter(grid);
@@ -211,23 +225,24 @@ public class WritePostActivity extends Activity {
 //http://blog.naver.com/legendx/40132716891 따라하는중
     //https://www.simplifiedcoding.net/android-upload-image-to-server-using-php-mysql/ 참고햅
     //http://titis.tistory.com/48
-    private class WritePostTask extends AsyncTask<String, Void, Void> {
-    String noResult;
-
+    private class WritePostTask1 extends AsyncTask<String, Void, Void> { //img1개
+    String noResult,myResult;
 
     @Override
     protected Void doInBackground(String... strings) {
+/* no max인거 구할랬는데
             try {
-                URL url = new URL("http://hyunazi.dothome.co.kr/AndDiary/get_no.php");
-                HttpURLConnection http = (HttpURLConnection) url.openConnection();
-                http.setDefaultUseCaches(false);
-                http.setDoInput(true);
-                http.setDoOutput(true);
-                http.setRequestMethod("POST");
 
-                http.setRequestProperty("content-type","application/x-www-form-urlencoded");
+                URL url1 = new URL("http://hyunazi.dothome.co.kr/AndDiary/get_no.php");
+                HttpURLConnection http1 = (HttpURLConnection) url1.openConnection();
+                http1.setDefaultUseCaches(false);
+                http1.setDoInput(true);
+                http1.setDoOutput(true);
+                http1.setRequestMethod("POST");
 
-                OutputStreamWriter outStream = new OutputStreamWriter(http.getOutputStream(), "UTF-8");
+                http1.setRequestProperty("content-type","application/x-www-form-urlencoded");
+
+                OutputStreamWriter outStream = new OutputStreamWriter(http1.getOutputStream(), "UTF-8");
                 PrintWriter writer = new PrintWriter(outStream);
                 StringBuffer buffer = new StringBuffer();
                 buffer.append("id").append("=").append(userId);
@@ -235,7 +250,7 @@ public class WritePostActivity extends Activity {
                 writer.flush();
 
                 InputStreamReader tmp = new InputStreamReader(
-                        http.getInputStream(), "UTF-8");
+                        http1.getInputStream(), "UTF-8");
                 BufferedReader reader = new BufferedReader(tmp);
                 StringBuilder builder = new StringBuilder();
                 String str;
@@ -245,57 +260,98 @@ public class WritePostActivity extends Activity {
                 noResult = builder.toString();
 
                 Log.d("resultNo", "result : " + noResult);
-            } catch (MalformedURLException e) {
-                //
-            } catch (IOException e) {
-                //
-            }
+//            } catch (MalformedURLException e) {
+//                //
+//            } catch (IOException e) {
+//                //
+//            }
+*/
+            try {//http://www.verydemo.com/demo_c116_i9557.html 갈아탐
 
-            try {
-            URL url = new URL("http://hyunazi.dothome.co.kr/AndDiary/write_post.php");
-            String boundary = "!";
-            URLConnection con = url.openConnection();
-            con.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
-            con.setDoOutput(true);
+                String boundary = "q0990sdfw0099l";
+                String lineEnd = "\r\n";
+                String twoHyphens = "--";
 
-            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-            wr.writeBytes("\r\n--" + boundary + "\r\n");
-            wr.writeBytes("Content-Disposition: form-data; name=\"id\"\r\n\r\n" + strings[0]);
+                URL url = new URL("http://hyunazi.dothome.co.kr/AndDiary/write_post1.php");
+                HttpURLConnection http = (HttpURLConnection)url.openConnection();
+                http.setChunkedStreamingMode(1024*1024);
+                http.setDoInput(true);
+                http.setDoOutput(true);
+                http.setUseCaches(false);
+                http.setRequestMethod("POST");
 
-            wr.writeBytes("\r\n--" + boundary + "\r\n");
-            wr.writeBytes("Content-Disposition: form-data; name=\"date\"\r\n\r\n" + strings[1]);
+                http.setRequestProperty("Charset","UTF-8");
+                http.setRequestProperty("Content-Type","multipart/form-data;boundary="+boundary);
 
-            wr.writeBytes("\r\n--" + boundary + "\r\n");
-            wr.writeBytes("Content-Disposition: form-data; name=\"title\"\r\n\r\n" + strings[2]);
+                //Id
+                DataOutputStream dos = new DataOutputStream(http.getOutputStream());
+                dos.writeBytes(twoHyphens+boundary+lineEnd);
+                dos.writeBytes("Content-Disposition: form-data; name=\"id\""+lineEnd);
+                dos.writeBytes(lineEnd);
+                dos.writeBytes(strings[0]);
+                dos.writeBytes(lineEnd);
 
-            wr.writeBytes("\r\n--" + boundary + "\r\n");
-            wr.writeBytes("Content-Disposition: form-data; name=\"memo\"\r\n\r\n" + strings[3]);
+                //Date
+                dos.writeBytes(twoHyphens+boundary+lineEnd);
+                dos.writeBytes("Content-Disposition: form-data; name=\"date\""+lineEnd);
+                dos.writeBytes(lineEnd);
+                dos.writeBytes(strings[1]);
+                dos.writeBytes(lineEnd);
 
-            int SaveNo = Integer.parseInt(noResult) + 1;
-            String imgName = SaveNo + "img0.jpg";
-            //String tempLine ="Content-Disposition: form-data; name=\"img\";filename=\"img.jpg\"\r\n";
-            wr.writeBytes("\r\n--" + boundary + "\r\n");
-            wr.writeBytes("Content-Disposition: form-data; name=\"img\";filename=" + "\"" + imgName + "\"\r\n");//TODO
-            wr.writeBytes("Content-Type:  application/octet-stream\r\n\r\n");
+                //title
+                dos.writeBytes(twoHyphens+boundary+lineEnd);
+                dos.writeBytes("Content-Disposition: form-data; name=\"title\""+lineEnd);
+                dos.writeBytes(lineEnd);
+                dos.writeBytes(strings[2]);
+                dos.writeBytes(lineEnd);
 
-            FileInputStream fileInputStream = new FileInputStream("file:/" + strings[4]);
-            int bytesAvailable = fileInputStream.available();
-            int maxBufferSize = 1024;
-            int bufferSize = Math.min(bytesAvailable, maxBufferSize);
-            byte[] buffer = new byte[bufferSize];
+                //memo
+                dos.writeBytes(twoHyphens+boundary+lineEnd);
+                dos.writeBytes("Content-Disposition: form-data; name=\"memo\""+lineEnd);
+                dos.writeBytes(lineEnd);
+                dos.writeBytes(strings[3]);
+                dos.writeBytes(lineEnd);
 
-            int bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-            while (bytesRead > 0) {
-                DataOutputStream dataWrite = new DataOutputStream(con.getOutputStream());
-                dataWrite.write(buffer, 0, bufferSize);
-                bytesAvailable = fileInputStream.available();
-                bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-            }
-            fileInputStream.close();
 
-            wr.writeBytes("\r\n--" + boundary + "\r\n");
-            wr.flush();
+                String filePath = strings[4];
+                int index = filePath.lastIndexOf("/");
+                String fileName = filePath.substring(index+1,filePath.length());
+
+                dos.writeBytes(twoHyphens+boundary+lineEnd);
+                dos.writeBytes("Content-Disposition: form-data; name=\"img\";filename=\"" + fileName + "\""+lineEnd);
+                dos.writeBytes(lineEnd);
+
+                FileInputStream fis = new FileInputStream(filePath);
+                int bytesAvailable = fis.available();
+                int maxBufferSize = 1024;
+                int bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                byte[] buffer = new byte[bufferSize];
+
+                int bytesRead = fis.read(buffer, 0, bufferSize);
+                while (bytesRead > 0) {
+                    DataOutputStream dataWrite = new DataOutputStream(http.getOutputStream());
+                    dataWrite.write(buffer, 0, bufferSize);
+                    bytesAvailable = fis.available();
+                    bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                    bytesRead = fis.read(buffer, 0, bufferSize);
+                }
+                fis.close();
+
+                dos.writeBytes(lineEnd);
+                dos.writeBytes(twoHyphens+boundary+twoHyphens+lineEnd);
+                dos.flush();
+
+
+                InputStreamReader tmp = new InputStreamReader(http.getInputStream(), "UTF-8");
+                BufferedReader reader = new BufferedReader(tmp);
+                StringBuilder builder = new StringBuilder();
+                String str;
+                while ((str = reader.readLine()) != null) {
+                    builder.append(str + "\n");
+                }
+                myResult = builder.toString();
+
+                Log.d("resultPost", "result : " + myResult);
 
         } catch (MalformedURLException e) {
             e.getStackTrace();
@@ -306,5 +362,132 @@ public class WritePostActivity extends Activity {
         return null;
     }
 }
+
+    private class WritePostTask2 extends AsyncTask<String, Void, Void> {//img2
+        String noResult,myResult;
+
+        @Override
+        protected Void doInBackground(String... strings) {
+
+            try {//http://www.verydemo.com/demo_c116_i9557.html 갈아탐
+
+                String boundary = "q0990sdfw0099l";
+                String lineEnd = "\r\n";
+                String twoHyphens = "--";
+
+                URL url = new URL("http://hyunazi.dothome.co.kr/AndDiary/write_post2.php");
+                HttpURLConnection http = (HttpURLConnection)url.openConnection();
+                http.setChunkedStreamingMode(1024*1024);
+                http.setDoInput(true);
+                http.setDoOutput(true);
+                http.setUseCaches(false);
+                http.setRequestMethod("POST");
+
+                http.setRequestProperty("Charset","UTF-8");
+                http.setRequestProperty("Content-Type","multipart/form-data;boundary="+boundary);
+
+                //Id
+                DataOutputStream dos = new DataOutputStream(http.getOutputStream());
+                dos.writeBytes(twoHyphens+boundary+lineEnd);
+                dos.writeBytes("Content-Disposition: form-data; name=\"id\""+lineEnd);
+                dos.writeBytes(lineEnd);
+                dos.writeBytes(strings[0]);
+                dos.writeBytes(lineEnd);
+
+                //Date
+                dos.writeBytes(twoHyphens+boundary+lineEnd);
+                dos.writeBytes("Content-Disposition: form-data; name=\"date\""+lineEnd);
+                dos.writeBytes(lineEnd);
+                dos.writeBytes(strings[1]);
+                dos.writeBytes(lineEnd);
+
+                //title
+                dos.writeBytes(twoHyphens+boundary+lineEnd);
+                dos.writeBytes("Content-Disposition: form-data; name=\"title\""+lineEnd);
+                dos.writeBytes(lineEnd);
+                dos.writeBytes(strings[2]);
+                dos.writeBytes(lineEnd);
+
+                //memo
+                dos.writeBytes(twoHyphens+boundary+lineEnd);
+                dos.writeBytes("Content-Disposition: form-data; name=\"memo\""+lineEnd);
+                dos.writeBytes(lineEnd);
+                dos.writeBytes(strings[3]);
+                dos.writeBytes(lineEnd);
+
+
+                String filePath = strings[4];
+                int index = filePath.lastIndexOf("/");
+                String fileName = filePath.substring(index+1,filePath.length());
+
+                dos.writeBytes(twoHyphens+boundary+lineEnd);
+                dos.writeBytes("Content-Disposition: form-data; name=\"img\";filename=\"" + fileName + "\""+lineEnd);
+                dos.writeBytes(lineEnd);
+
+                FileInputStream fis = new FileInputStream(filePath);
+                int bytesAvailable = fis.available();
+                int maxBufferSize = 1024;
+                int bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                byte[] buffer = new byte[bufferSize];
+
+                int bytesRead = fis.read(buffer, 0, bufferSize);
+                while (bytesRead > 0) {
+                    DataOutputStream dataWrite = new DataOutputStream(http.getOutputStream());
+                    dataWrite.write(buffer, 0, bufferSize);
+                    bytesAvailable = fis.available();
+                    bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                    bytesRead = fis.read(buffer, 0, bufferSize);
+                }
+                fis.close();//img1끝
+/*
+                String filePath2 = strings[5];
+                int index2 = filePath2.lastIndexOf("/");
+                String fileName2 = filePath2.substring(index2+1,filePath2.length());
+
+                dos.writeBytes(twoHyphens+boundary+lineEnd);
+                dos.writeBytes("Content-Disposition: form-data; name=\"img2\";filename=\"" + fileName2 + "\""+lineEnd);
+                dos.writeBytes(lineEnd);
+
+                FileInputStream fis2 = new FileInputStream(filePath2);
+                int bytesAvailable2 = fis2.available();
+                int maxBufferSize2 = 1024;
+                int bufferSize2 = Math.min(bytesAvailable2, maxBufferSize2);
+                byte[] buffer2 = new byte[bufferSize2];
+
+                int bytesRead2 = fis2.read(buffer2, 0, bufferSize2);
+                while (bytesRead2 > 0) {
+                    DataOutputStream dataWrite = new DataOutputStream(http.getOutputStream());
+                    dataWrite.write(buffer2, 0, bufferSize2);
+                    bytesAvailable2 = fis2.available();
+                    bufferSize2 = Math.min(bytesAvailable2, maxBufferSize2);
+                    bytesRead2 = fis.read(buffer2, 0, bufferSize2);
+                }
+                fis2.close();
+*/
+                dos.writeBytes(lineEnd);
+                dos.writeBytes(twoHyphens+boundary+twoHyphens+lineEnd);
+                dos.flush();
+
+
+                InputStreamReader tmp = new InputStreamReader(http.getInputStream(), "UTF-8");
+                BufferedReader reader = new BufferedReader(tmp);
+                StringBuilder builder = new StringBuilder();
+                String str;
+                while ((str = reader.readLine()) != null) {
+                    builder.append(str + "\n");
+                }
+                myResult = builder.toString();
+
+                Log.d("resultPost", "result : " + myResult);
+
+            } catch (MalformedURLException e) {
+                e.getStackTrace();
+            } catch (Exception e) {
+                e.getStackTrace();
+            }
+
+            return null;
+        }
+    }
 
 }
