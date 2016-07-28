@@ -54,6 +54,7 @@ public class WritePostActivity extends Activity {
     GregorianCalendar calendar;
     Date d;
     int year1, month1, day1, check = 2;
+    static int deviceWidth;
 
     View dialogView;
     DatePicker datePicker;
@@ -85,7 +86,7 @@ public class WritePostActivity extends Activity {
         DisplayMetrics displayMetrics = new DisplayMetrics();//Display size구해서 이쁘게 배치할거야 이미지
         WindowManager windowManager = (WindowManager)getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(displayMetrics);
-        int deviceWidth = displayMetrics.widthPixels;
+        deviceWidth = displayMetrics.widthPixels;
 
         GridViewImg grid = new GridViewImg(this);
         grid.setDisplaySize(deviceWidth,deviceWidth);
@@ -205,6 +206,7 @@ public class WritePostActivity extends Activity {
             Log.d("!!!!!!!!!temp",tempImg[1]);
             GridViewImg grid = new GridViewImg(this);
             grid.setBitImg(tempImg);
+            grid.setDisplaySize(deviceWidth,deviceWidth);
             gridView.setAdapter(grid);
 
         }

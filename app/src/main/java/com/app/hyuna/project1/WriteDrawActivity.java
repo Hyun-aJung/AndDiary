@@ -1,20 +1,36 @@
 package com.app.hyuna.project1;
 
 import android.app.Activity;
-import android.content.Context;
+
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Path;
+
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.AttributeSet;
-import android.view.MotionEvent;
+
+import android.os.Environment;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 
 /**
  * Created by 4강의실 on 2016-07-14.
@@ -22,192 +38,170 @@ import java.util.ArrayList;
 public class WriteDrawActivity extends Activity {
     EditText edtTitle;
     ImageButton btnBlack, btnBlue, btnGreen, btnRed, btnYellow;
-    CustomView customView;
-    //MyView myView=null;
+    Button btnSave;
+    CustomDrawView customView;
+    final int MEMO=0,DRAW=1,POST=2,SET=3;
+
+    String title, userId;
+    String fileName;
+    int listNum;
+
+    AsyncTask<?,?,?> task;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_write_draw);
         setTitle("Drawing Memo");
 
-        customView = (CustomView)findViewById(R.id.myView);
-        customView.setMcontext(WriteDrawActivity.this);
 
+        Intent intent = getIntent();
+        userId = intent.getExtras().getString("userId");
+        listNum = intent.getExtras().getInt("list");
 
+        customView = (CustomDrawView)findViewById(R.id.myView);
 
-        //MyView myView = new MyView(getApplicationContext());
-        //setContentView(R.id.myView);
+        btnBlack = (ImageButton)findViewById(R.id.btnBlack);
+        btnBlue = (ImageButton)findViewById(R.id.btnBlue);
+        btnGreen = (ImageButton)findViewById(R.id.btnGreen);
+        btnYellow = (ImageButton)findViewById(R.id.btnYellow);
+        btnRed = (ImageButton)findViewById(R.id.btnRed);
+        btnSave = (Button)findViewById(R.id.btnSave);
 
-    }
-}
-/*
-class CustomView extends android.view.View{
-    private Context mcontext = null;
-    private Paint paint = null;
-    ArrayList<Point> points = new ArrayList<Point>();
+        edtTitle = (EditText)findViewById(R.id.edtTitle);
 
-    public CustomView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
-
-    public CustomView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    public CustomView(Context context) {
-        super(context);
-    }
-
-    public void initPaint(int i){
-        points.clear();
-        paint = new Paint();
-        paint.setColor(Color.BLACK);
-        paint.setStrokeWidth(5);
-        paint.setAntiAlias(true);
-    }
-    public void setMcontext(Context context){
-        this.mcontext = mcontext;
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        canvas.drawColor(Color.WHITE);
-        for (int i = 0; i < points.size(); i++) {
-            if (!points.get(i).isDraw) {
-                continue;
+        btnBlack.setOnClickListener(new View.OnClickListener() {//검정
+            @Override
+            public void onClick(View view) {
+                customView.setColor(Color.BLACK);
             }
-            canvas.drawLine(points.get(i - 1).x, points.get(i - 1).y, points.get(i).x, points.get(i).y, paint);
-        }
-        //super.onDraw(canvas);
-    }
+        });
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_MOVE:
-                points.add(new Point(event.getX(), event.getY(), true));
-                this.invalidate();
-                break;
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_DOWN:
-                points.add(new Point(event.getX(), event.getY(), false));
-            default:
-                break;
-        }
-        return false;
-    }
-}
-*/
-
-
-
-
-/*
-class MyView extends View {//Canvas 만들기
-    Paint paint = new Paint();
-    Path path = new Path();
-    public MyView(Context context) {
-        super(context);
-    }
-
-    ArrayList<Point> points = new ArrayList<Point>();
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        paint.setAntiAlias(true);
-        paint.setStrokeWidth(5);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setColor(Color.BLACK);
-        for (int i = 0; i < points.size(); i++) {
-            if (!points.get(i).isDraw) {
-                continue;
+        btnBlue.setOnClickListener(new View.OnClickListener() {//파랑
+            @Override
+            public void onClick(View view) {
+                customView.setColor(Color.BLUE);
             }
-            canvas.drawLine(points.get(i - 1).x, points.get(i - 1).y, points.get(i).x, points.get(i).y, paint);
+        });
+
+        btnGreen.setOnClickListener(new View.OnClickListener() {//초록
+            @Override
+            public void onClick(View view) {
+                customView.setColor(Color.GREEN);
+            }
+        });
+
+        btnYellow.setOnClickListener(new View.OnClickListener() {//노랑
+            @Override
+            public void onClick(View view) {
+                customView.setColor(Color.YELLOW);
+            }
+        });
+
+        btnRed.setOnClickListener(new View.OnClickListener() {//빨강
+            @Override
+            public void onClick(View view) {
+                customView.setColor(Color.RED);
+            }
+        });
+
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                title = edtTitle.getText().toString();
+
+                customView.setBitmapSize(customView.getWidth(),customView.getHeight());
+
+                //sd카드에 저장 시작
+                String path = Environment.getExternalStorageDirectory().getAbsolutePath();
+                Bitmap b = customView.getBitmap();
+
+                try{
+                    File f = new File(path+"/drawNote");
+                    f.mkdir();
+
+                    long now = System.currentTimeMillis();
+                    Date date = new Date(now);
+                    SimpleDateFormat fFormat = new SimpleDateFormat("yyMMddhhmmss");
+                    String fNow = fFormat.format(date);
+
+                    fileName = userId+"_"+title+"_"+fNow+".png";
+                    File f2 = new File(path+"/drawNote/"+fileName);
+
+                    Canvas c = new Canvas(b);
+                    customView.draw(c);
+
+                    FileOutputStream fos = new FileOutputStream(f2);
+                    if(fos!=null){
+                        b.compress(Bitmap.CompressFormat.PNG,100,fos);
+                        fos.close();
+                    }
+                }catch (Exception e){
+                    e.getStackTrace();
+                }
+                //sd카드에 저장 완료
+                task = new SavePostTask().execute(userId,title,fileName);
+
+
+
+            }
+        });
+    }
+
+    private class SavePostTask extends AsyncTask<String, Void, Void>{
+        @Override
+        protected Void doInBackground(String... strings) {
+            HttpPostData(strings[0],strings[1],strings[2]);
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Toast.makeText(getApplicationContext(),"저장되었습니다!",Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(WriteDrawActivity.this,ListActivity.class);
+            intent.putExtra("userId",userId);
+            intent.putExtra("list",DRAW);
+            startActivity(intent);
+            finish();
         }
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_MOVE:
-                points.add(new Point(event.getX(), event.getY(), true));
-                this.invalidate();
-                break;
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_DOWN:
-                points.add(new Point(event.getX(), event.getY(), false));
-            default:
-                break;
-        }
-        return true;
-    }
-}*/
+    public void HttpPostData(String userId, String title, String memo){
+        try{
+            URL url = new URL("http://hyunazi.dothome.co.kr/AndDiary/write_draw.php");
+            HttpURLConnection http = (HttpURLConnection)url.openConnection();
+            http.setDefaultUseCaches(false);
+            http.setDoInput(true);
+            http.setDoOutput(true);
+            http.setRequestMethod("POST");
 
+            http.setRequestProperty("content-type",
+                    "application/x-www-form-urlencoded");
+            StringBuffer buffer = new StringBuffer();
+            buffer.append("id").append("=").append(userId).append("&");
+            buffer.append("title").append("=").append(title).append("&");
+            buffer.append("draw").append("=").append(fileName);
 
+            OutputStreamWriter outStream = new OutputStreamWriter(http.getOutputStream(),"UTF-8");
+            PrintWriter writer = new PrintWriter(outStream);
+            writer.write(buffer.toString());
+            writer.flush();
 
-/*
-class MyView extends View {
+            InputStreamReader tmp = new InputStreamReader(
+                    http.getInputStream(), "UTF-8");
+            BufferedReader reader = new BufferedReader(tmp);
+            StringBuilder builder = new StringBuilder();
+            String str;
+            while ((str = reader.readLine()) != null) {
+                builder.append(str + "\n");
+            }
+            String myResult = builder.toString();
 
-    Paint paint = new Paint();
-    Path path = new Path();
-
-    float y ;
-    float x ;
-
-    public MyView(Context context) {
-        super(context);
-    }
-
-
-    protected void onDraw(Canvas canvas) {
-        paint.setStrokeWidth(3);
-        paint.setColor(Color.BLACK);
-        paint.setStyle(Paint.Style.STROKE);
-
-        canvas.drawPath(path, paint);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-
-        x = event.getX();
-        y = event.getY();
-
-        switch(event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                path.moveTo(x, y);
-                break;
-            case MotionEvent.ACTION_MOVE:
-                x = event.getX();
-                y = event.getY();
-                path.lineTo(x, y);
-                break;
-            case MotionEvent.ACTION_UP:
-                break;
-        }
-
-        invalidate();
-
-        return true;
+            Log.d("result", "result : " + myResult);
+        } catch (MalformedURLException e) {
+            //
+        } catch (IOException e) {
+            //
+        } // try
     }
 }
-*/
-
-
-                /*
-                case MotionEvent.ACTION_DOWN:
-                    startX = (int)event.getX();
-                    startY = (int)event.getY();
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    case MotionEvent.ACTION_UP:
-                        stopX = (int)event.getX();
-                        stopY = (int)event.getY();
-                        this.invalidate();
-                        break;*/
-
-//return true;
-//}
-//}
-//}

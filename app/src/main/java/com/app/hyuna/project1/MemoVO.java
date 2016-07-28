@@ -9,7 +9,7 @@ public class MemoVO {
     private int no;
     private String title;
     private String memo;
-    private Date date;
+    private String date;
     private String id;
 
     public int getNo() {
@@ -36,11 +36,11 @@ public class MemoVO {
         this.memo = memo;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -51,13 +51,20 @@ public class MemoVO {
     public void setId(String id) {
         this.id = id;
     }
-
-    public MemoVO(int no, String title, String memo, Date date, String id) {
+/*
+    public MemoVO(int no, String title, String memo, String date, String id) {
         this.no = no;
         this.title = title;
         this.memo = memo;
         this.date = date;
         this.id = id;
+    }*/
+
+    public MemoVO(int no, String title, String memo, String date) {
+        this.no = no;
+        this.title = title;
+        this.memo = memo;
+        this.date = date;
     }
 
     @Override

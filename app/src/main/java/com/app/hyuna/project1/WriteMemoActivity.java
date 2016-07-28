@@ -75,7 +75,7 @@ public class WriteMemoActivity extends Activity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            Toast.makeText(getApplicationContext(),"회원가입 완료!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"저장되었습니다!",Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(WriteMemoActivity.this,ListActivity.class);
             intent.putExtra("userId",userId);
             intent.putExtra("list",MEMO);
