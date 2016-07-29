@@ -1,18 +1,19 @@
 package com.app.hyuna.project1;
 
-import java.util.Date;
+import android.graphics.Bitmap;
 
 /**
- * Created by 4강의실 on 2016-07-19.
+ * Created by 4강의실 on 2016-07-29.
  */
-public class PostVO {
+public class DrawVO {
 
     private int no;
     private String title;
     private String memo;
     private String date;
-    private String img;
+    private String draw;
     private String id;
+    private Bitmap drawBit;
 
     public int getNo() {
         return no;
@@ -46,12 +47,12 @@ public class PostVO {
         this.date = date;
     }
 
-    public String getImg() {
-        return img;
+    public String getDraw() {
+        return draw;
     }
 
-    public void setImg(String img) {
-        this.img = img;
+    public void setDraw(String draw) {
+        this.draw = draw;
     }
 
     public String getId() {
@@ -62,12 +63,20 @@ public class PostVO {
         this.id = id;
     }
 
-    public PostVO(int no, String title, String memo, String date, String img, String id) {
+    public Bitmap getDrawBit() {
+        return drawBit;
+    }
+
+    public void setDrawBit(Bitmap drawBit) {
+        this.drawBit = drawBit;
+    }
+
+    public DrawVO(int no, String title, String memo, String date, String draw, String id) {
         this.no = no;
         this.title = title;
         this.memo = memo;
         this.date = date;
-        this.img = img;
+        this.draw = draw;
         this.id = id;
     }
 
@@ -78,7 +87,7 @@ public class PostVO {
                 ", title='" + title + '\'' +
                 ", memo='" + memo + '\'' +
                 ", date=" + date +
-                ", img='" + img + '\'' +
+                ", draw='" + draw + '\'' +
                 ", id='" + id + '\'' +
                 '}';
     }

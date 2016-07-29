@@ -7,14 +7,15 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TabHost;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -22,6 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -38,13 +40,19 @@ import java.util.HashMap;
  */
 @SuppressWarnings("deprecation")
 public class ListActivity extends TabActivity{
-    public static MemoVO mvo;
     ArrayList<HashMap<String,String>> memoList;
 
     AsyncTask<?,?,?> task;
+////////
+    Button btnMemoNew,btnPostNew,btnDrawNew, btnDrawPre, btnDrawNext;
+    TextView edtDrawTitle, edtDrawDate;
+    CustomListDrawView myPicture;
+    File[] imageFiles;
+    String imageFname;
+    int drawNum;
+///////이 블락 draw 애들
 
 
-    Button btnMemoNew,btnPostNew,btnDrawNew;
     Intent intent;
     String userId;
     ListView listView;
@@ -61,7 +69,6 @@ public class ListActivity extends TabActivity{
         //menu.setHeaderIcon() //TODO
         menu.setHeaderTitle("삭제하시겠습니까?");
         menuInflater.inflate(R.menu.menu1,menu);
-
     }
 
     @Override
@@ -117,6 +124,13 @@ public class ListActivity extends TabActivity{
         listView = (ListView) findViewById(R.id.listViewMemo);
         registerForContextMenu(listView);
 
+        //draw애들 선언
+        btnDrawPre = (Button)findViewById(R.id.btnDrawPre);
+        btnDrawNext = (Button)findViewById(R.id.btnDrawNext);
+        edtDrawTitle = (TextView)findViewById(R.id.edtDrawTitle);
+        edtDrawDate = (TextView)findViewById(R.id.edtDrawDate);
+        myPicture = (CustomListDrawView)findViewById(R.id.myPictureView1);
+
 
         //메모버튼 클릭해서 들어왔을때는 메모List띄우기. Default는 memo
         if (listNum == MEMO) tabHost.setCurrentTab(0);
@@ -126,8 +140,8 @@ public class ListActivity extends TabActivity{
         else tabHost.setCurrentTab(0);
 
 
-
-        if (tabHost.getCurrentTab() == 0) {//Memo일때
+        ///Memo일때
+        if (tabHost.getCurrentTab() == 0) {
             adapter = new CustomWidgetAdapter(getApplicationContext());
             listView.setAdapter(adapter);
             task = new ReadMemoTask().execute(userId);
@@ -141,7 +155,14 @@ public class ListActivity extends TabActivity{
             }
         });
 
+
+
+        //Draw일 떄
         if (tabHost.getCurrentTab() == 1) {
+            imageFiles = new File("/sdcard/drawNote").listFiles();
+            imageFname = imageFiles[0].toString();
+            myPicture.imagePath = imageFname;
+
             //TODO tabDraw
         }
         btnDrawNew.setOnClickListener(new View.OnClickListener() {// + 버튼누를때 새창 띄워서 새 메모 하기
@@ -152,7 +173,37 @@ public class ListActivity extends TabActivity{
                 startActivity(intent);
             }
         });
+        btnDrawPre.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(drawNum<=0){
+                    Toast.makeText(getApplicationContext(),"첫번째 입니다.",Toast.LENGTH_SHORT).show();
+                }else{
+                    drawNum--;
+                    imageFname = imageFiles[drawNum].toString();
+                    myPicture.imagePath = imageFname;
+                    myPicture.invalidate();
+                }
+            }
+        });
+        btnDrawNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(drawNum>=imageFiles.length-1){
+                    Toast.makeText(getApplicationContext(),"마지막 입니다.",Toast.LENGTH_SHORT).show();
+                }else{
+                    drawNum++;
+                    imageFname = imageFiles[drawNum].toString();
+                    myPicture.imagePath = imageFname;
+                    myPicture.invalidate();
+                }
+            }
+        });
 
+
+
+
+        //POST
         if (tabHost.getCurrentTab() == 2) {
             //TODO tabPost
         }

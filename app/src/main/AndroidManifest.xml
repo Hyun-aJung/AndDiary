@@ -42,6 +42,8 @@
         <activity android:name=".ChooseImageActivity"/>
         <activity android:name=".WidgetActivity"/>
         <activity android:name="CustomWidgetMemoListActivity"/>
+
+        <activity android:name="CustomListDrawView"/>
     </application>
 
 
