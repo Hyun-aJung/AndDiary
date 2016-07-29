@@ -37,6 +37,8 @@
         <activity android:name=".WriteDrawActivity"/>
         <activity android:name=".WritePostActivity"
         android:theme="@style/Theme.AppCompat" />
+
+        <activity android:name=".ReadMemoActivity"/>
         <activity android:name=".ChooseImageActivity"/>
         <activity android:name=".WidgetActivity"/>
         <activity android:name="CustomWidgetMemoListActivity"/>

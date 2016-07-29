@@ -18,7 +18,7 @@ import android.widget.ListView;
 public class CustomWidgetMemoListActivity extends Activity{
     private ListView listView;
     private CustomWidgetAdapter adapter;
-    String tempTitle,tempMemo, widgetTitle, widgetMemo;
+    String tempTitle,tempMemo, tempDate,widgetTitle, widgetMemo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +31,13 @@ public class CustomWidgetMemoListActivity extends Activity{
         //TODO DB에서 메모 읽어오기
         tempTitle = "hi title1";
         tempMemo = "hi Memo1";
-        CustomWidgetRow temp = new CustomWidgetRow(tempTitle,tempMemo);
+        tempDate = "111";
+        CustomWidgetRow temp = new CustomWidgetRow(tempTitle,tempMemo,tempDate);
         adapter.add(temp);
 
         tempTitle = "오늘은";
         tempMemo = "뇽이부기랑 데이트하는날~♥3 ♥";
-        temp = new CustomWidgetRow(tempTitle,tempMemo);
+        temp = new CustomWidgetRow(tempTitle,tempMemo,tempDate);
         adapter.add(temp);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -52,16 +53,6 @@ public class CustomWidgetMemoListActivity extends Activity{
                 intent.setAction("android.appwidget.action.APPWIDGET_UPDATE");
                 sendBroadcast(intent);
                 finish();
-;
-
-                /*widgetTitle = adapter.getItem(position).getTitle();
-                widgetMemo = adapter.getItem(position).getMemo();
-                CustomWidgetRow tempWidget = new CustomWidgetRow(widgetTitle,widgetMemo);
-                Intent intent = new Intent(getApplicationContext(),WidgetActivity.class);
-                intent.putExtra("tempTitle",tempWidget.getTitle());
-                intent.putExtra("tempMemo",tempWidget.getMemo());
-                setResult(RESULT_OK,intent);
-                finish();*/
             }
         });
     }

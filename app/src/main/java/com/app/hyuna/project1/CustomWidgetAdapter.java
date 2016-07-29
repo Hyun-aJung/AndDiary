@@ -15,7 +15,7 @@ import java.util.ArrayList;
  * Created by 4강의실 on 2016-07-20.
  */
 public class CustomWidgetAdapter extends BaseAdapter{
-    TextView txtTitle, txtMemo;
+    TextView txtTitle, txtMemo, txtDate;
     ArrayList<CustomWidgetRow> rows = new ArrayList<CustomWidgetRow>();
     Context mContext;
     CustomWidgetRow crow;
@@ -58,10 +58,12 @@ public class CustomWidgetAdapter extends BaseAdapter{
 
         txtTitle = (TextView)row.findViewById(R.id.title);
         txtMemo = (TextView)row.findViewById(R.id.memo);
+        txtDate = (TextView)row.findViewById(R.id.date);
         crow = getItem(position);
         if(crow !=null){
             txtTitle.setText(crow.getTitle());
             txtMemo.setText(crow.getMemo());
+            txtDate.setText(crow.getDate());
         }
 
         return row;
