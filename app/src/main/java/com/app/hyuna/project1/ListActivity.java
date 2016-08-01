@@ -5,6 +5,7 @@ import android.app.TabActivity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -44,6 +46,7 @@ public class ListActivity extends TabActivity{
 
     AsyncTask<?,?,?> task;
 ////////
+    LinearLayout layoutDraw;
     Button btnMemoNew,btnPostNew,btnDrawNew, btnDrawPre, btnDrawNext;
     TextView edtDrawTitle, edtDrawDate;
     CustomListDrawView myPicture;
@@ -52,6 +55,7 @@ public class ListActivity extends TabActivity{
     int drawNum;
 ///////이 블락 draw 애들
 
+    String deleteContextCheck="";
 
     Intent intent;
     String userId;
@@ -76,15 +80,30 @@ public class ListActivity extends TabActivity{
         Log.d("noChec!!!",item.getItemId()+"");
         switch (item.getItemId()){
             case R.id.item1:
-                if(!noCheck.equals(-1)){
-                    Log.d("noChec!!!",noCheck);
-                    task = new DeleteMemoTask().execute(noCheck);
-                    Intent mIntent = new Intent(getApplicationContext(),ListActivity.class);
-                    mIntent.putExtra("userId",userId);
-                    mIntent.putExtra("list",MEMO);
-                    startActivity(mIntent);
+                Log.d("deleteDraw","item1");
+                if(deleteContextCheck.equals("memo")) {
+                    if (!noCheck.equals(-1)) {
+                        Log.d("noChec!!!", noCheck);
+                        task = new DeleteMemoTask().execute(noCheck);
+                        Intent mIntent = new Intent(getApplicationContext(), ListActivity.class);
+                        mIntent.putExtra("userId", userId);
+                        mIntent.putExtra("list", MEMO);
+                        startActivity(mIntent);
+                        finish();
+                    }
+                }else if(deleteContextCheck.equals("draw")){
+                    String path = Environment.getExternalStorageDirectory().getAbsolutePath();
+                    int count = imageFname.lastIndexOf("/");
+                    String temp  = imageFname.substring(count);
+                    File file = new File(path+"/drawNote"+temp);
+                    file.delete();
+                    Intent intent = new Intent(getApplicationContext(),ListActivity.class);
+                    intent.putExtra("userId",userId);
+                    intent.putExtra("list",DRAW);
+                    startActivity(intent);
                     finish();
                 }
+
                 return true;
             case R.id.item2:
                 return true;
@@ -122,7 +141,7 @@ public class ListActivity extends TabActivity{
         btnPostNew = (Button) findViewById(R.id.btnPostNew);
         btnDrawNew = (Button) findViewById(R.id.btnDrawNew);
         listView = (ListView) findViewById(R.id.listViewMemo);
-        registerForContextMenu(listView);
+
 
         //draw애들 선언
         btnDrawPre = (Button)findViewById(R.id.btnDrawPre);
@@ -130,6 +149,7 @@ public class ListActivity extends TabActivity{
         edtDrawTitle = (TextView)findViewById(R.id.edtDrawTitle);
         edtDrawDate = (TextView)findViewById(R.id.edtDrawDate);
         myPicture = (CustomListDrawView)findViewById(R.id.myPictureView1);
+        layoutDraw = (LinearLayout)findViewById(R.id.layoutDraw);
 
 
         //메모버튼 클릭해서 들어왔을때는 메모List띄우기. Default는 memo
@@ -142,6 +162,9 @@ public class ListActivity extends TabActivity{
 
         ///Memo일때
         if (tabHost.getCurrentTab() == 0) {
+            unregisterForContextMenu(layoutDraw);
+            registerForContextMenu(listView);
+            deleteContextCheck="memo";
             adapter = new CustomWidgetAdapter(getApplicationContext());
             listView.setAdapter(adapter);
             task = new ReadMemoTask().execute(userId);
@@ -159,11 +182,19 @@ public class ListActivity extends TabActivity{
 
         //Draw일 떄
         if (tabHost.getCurrentTab() == 1) {
+            unregisterForContextMenu(listView);
+            registerForContextMenu(layoutDraw);
+            deleteContextCheck="draw";
             imageFiles = new File("/sdcard/drawNote").listFiles();
             imageFname = imageFiles[0].toString();
             myPicture.imagePath = imageFname;
-
-            //TODO tabDraw
+            int indexCount = imageFname.lastIndexOf("/");
+            String temp = imageFname.substring(indexCount+1);
+            String[] temp1 = temp.split("_");
+            String tempDate = temp1[2];
+            tempDate = "20"+tempDate.substring(0,2)+"-"+tempDate.substring(2,4)+"-"+tempDate.substring(4,6)+" "+tempDate.substring(6,8)+":"+tempDate.substring(8,10);
+            edtDrawTitle.setText(temp1[1]);
+            edtDrawDate.setText(tempDate);
         }
         btnDrawNew.setOnClickListener(new View.OnClickListener() {// + 버튼누를때 새창 띄워서 새 메모 하기
             @Override
@@ -183,6 +214,13 @@ public class ListActivity extends TabActivity{
                     imageFname = imageFiles[drawNum].toString();
                     myPicture.imagePath = imageFname;
                     myPicture.invalidate();
+                    int indexCount = imageFname.lastIndexOf("/");
+                    String temp = imageFname.substring(indexCount+1);
+                    String[] temp1 = temp.split("_");
+                    String tempDate = temp1[2];
+                    tempDate = "20"+tempDate.substring(0,2)+"-"+tempDate.substring(2,4)+"-"+tempDate.substring(4,6)+" "+tempDate.substring(6,8)+":"+tempDate.substring(8,10);
+                    edtDrawTitle.setText(temp1[1]);
+                    edtDrawDate.setText(tempDate);
                 }
             }
         });
@@ -196,10 +234,16 @@ public class ListActivity extends TabActivity{
                     imageFname = imageFiles[drawNum].toString();
                     myPicture.imagePath = imageFname;
                     myPicture.invalidate();
+                    int indexCount = imageFname.lastIndexOf("/");
+                    String temp = imageFname.substring(indexCount+1);
+                    String[] temp1 = temp.split("_");
+                    String tempDate = temp1[2];
+                    tempDate = "20"+tempDate.substring(0,2)+"-"+tempDate.substring(2,4)+"-"+tempDate.substring(4,6)+" "+tempDate.substring(6,8)+":"+tempDate.substring(8,10);
+                    edtDrawTitle.setText(temp1[1]);
+                    edtDrawDate.setText(tempDate);
                 }
             }
         });
-
 
 
 
