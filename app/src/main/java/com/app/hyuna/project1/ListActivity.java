@@ -63,7 +63,7 @@ public class ListActivity extends TabActivity{
     CustomWidgetAdapter adapter;
     int listNum;
     final int MEMO=0,DRAW=1,POST=2,SET=3;
-    static  String noCheck="-1";
+    static String noCheck="-1";
 
 
     @Override
@@ -77,13 +77,10 @@ public class ListActivity extends TabActivity{
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        Log.d("noChec!!!",item.getItemId()+"");
         switch (item.getItemId()){
             case R.id.item1:
-                Log.d("deleteDraw","item1");
-                if(deleteContextCheck.equals("memo")) {
+                if(deleteContextCheck.equals("memo")) {//Memo 롱클릭 삭제
                     if (!noCheck.equals(-1)) {
-                        Log.d("noChec!!!", noCheck);
                         task = new DeleteMemoTask().execute(noCheck);
                         Intent mIntent = new Intent(getApplicationContext(), ListActivity.class);
                         mIntent.putExtra("userId", userId);
@@ -91,7 +88,7 @@ public class ListActivity extends TabActivity{
                         startActivity(mIntent);
                         finish();
                     }
-                }else if(deleteContextCheck.equals("draw")){
+                }else if(deleteContextCheck.equals("draw")){ //Draw 롱클릭 삭제
                     String path = Environment.getExternalStorageDirectory().getAbsolutePath();
                     int count = imageFname.lastIndexOf("/");
                     String temp  = imageFname.substring(count);
@@ -102,10 +99,12 @@ public class ListActivity extends TabActivity{
                     intent.putExtra("list",DRAW);
                     startActivity(intent);
                     finish();
+                }else if(deleteContextCheck.equals("post")){//Post 롱클릭 삭제
+
                 }
 
                 return true;
-            case R.id.item2:
+            case R.id.item2:    //취소버튼
                 return true;
         }
 
@@ -123,7 +122,7 @@ public class ListActivity extends TabActivity{
         listNum = intent.getExtras().getInt("list");//intent로 보낸 데이터 받기
 
         //Tab메뉴 만들기
-        TabHost tabHost = getTabHost();
+        final TabHost tabHost = getTabHost();
         TabHost.TabSpec tabSpecMemo = tabHost.newTabSpec("Memo").setIndicator("MEMO").setContent(R.id.tabMemo);
         tabHost.addTab(tabSpecMemo);
 
@@ -137,11 +136,14 @@ public class ListActivity extends TabActivity{
         tabHost.addTab(tabSpecSet);
         //탭호스트 상단메뉴바 만들기 끝
 
+        //Memo 애들 선언
         btnMemoNew = (Button) findViewById(R.id.btnMemoNew);
         btnPostNew = (Button) findViewById(R.id.btnPostNew);
         btnDrawNew = (Button) findViewById(R.id.btnDrawNew);
         listView = (ListView) findViewById(R.id.listViewMemo);
-
+        adapter = new CustomWidgetAdapter(getApplicationContext());
+        listView.setAdapter(adapter);
+        task = new ReadMemoTask().execute(userId);
 
         //draw애들 선언
         btnDrawPre = (Button)findViewById(R.id.btnDrawPre);
@@ -149,8 +151,7 @@ public class ListActivity extends TabActivity{
         edtDrawTitle = (TextView)findViewById(R.id.edtDrawTitle);
         edtDrawDate = (TextView)findViewById(R.id.edtDrawDate);
         myPicture = (CustomListDrawView)findViewById(R.id.myPictureView1);
-        layoutDraw = (LinearLayout)findViewById(R.id.layoutDraw);
-
+        layoutDraw = (LinearLayout)findViewById(R.id.layoutDraw);//CustomView 롱클릭 하려고
 
         //메모버튼 클릭해서 들어왔을때는 메모List띄우기. Default는 memo
         if (listNum == MEMO) tabHost.setCurrentTab(0);
@@ -160,14 +161,14 @@ public class ListActivity extends TabActivity{
         else tabHost.setCurrentTab(0);
 
 
+//        tabHost
+
         ///Memo일때
         if (tabHost.getCurrentTab() == 0) {
             unregisterForContextMenu(layoutDraw);
             registerForContextMenu(listView);
             deleteContextCheck="memo";
-            adapter = new CustomWidgetAdapter(getApplicationContext());
-            listView.setAdapter(adapter);
-            task = new ReadMemoTask().execute(userId);
+            //task = new ReadMemoTask().execute(userId);
         }
         btnMemoNew.setOnClickListener(new View.OnClickListener() {// + 버튼누를때 새창 띄워서 새 메모 하기
             @Override
@@ -265,9 +266,32 @@ public class ListActivity extends TabActivity{
         }
 
 
-        //TODO memo는 customListview 해서 title, memo 차례대로 보여주자
-        //TODO 스크롤뷰 해서 전체db갯수 count한다음에 tablelayoutg. 3으로 나눈만큼 tablerow생성해서 Post,Draw 보여줌
-
+        tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+            @Override
+            public void onTabChanged(String s) {
+                if(s.equals("Memo")){
+                    unregisterForContextMenu(layoutDraw);
+                    registerForContextMenu(listView);
+                    deleteContextCheck="memo";
+                    //task = new ReadMemoTask().execute(userId);
+                }else if(s.equals("Draw")){
+                    unregisterForContextMenu(listView);
+                    registerForContextMenu(layoutDraw);
+                    deleteContextCheck="draw";
+                    imageFiles = new File("/sdcard/drawNote").listFiles();
+                    imageFname = imageFiles[0].toString();
+                    myPicture.imagePath = imageFname;
+                    int indexCount = imageFname.lastIndexOf("/");
+                    String temp = imageFname.substring(indexCount+1);
+                    String[] temp1 = temp.split("_");
+                    String tempDate = temp1[2];
+                    tempDate = "20"+tempDate.substring(0,2)+"-"+tempDate.substring(2,4)+"-"+tempDate.substring(4,6)+" "+tempDate.substring(6,8)+":"+tempDate.substring(8,10);
+                    edtDrawTitle.setText(temp1[1]);
+                    edtDrawDate.setText(tempDate);
+                }else if(s.equals("Post")){
+                }
+            }
+        });
 
 
     }
@@ -299,10 +323,10 @@ public class ListActivity extends TabActivity{
                     memoList.add(memoView);
                 }
 
-            for(int i=0; i<jo.length(); i++) {
-                CustomWidgetRow temp = new CustomWidgetRow(memoList.get(i).get("title"),memoList.get(i).get("memo"),memoList.get(i).get("date"));
-                adapter.add(temp);
-            }
+                for(int i=0; i<jo.length(); i++) {
+                    CustomWidgetRow temp = new CustomWidgetRow(memoList.get(i).get("title"),memoList.get(i).get("memo"),memoList.get(i).get("date"));
+                    adapter.add(temp);
+                }
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -321,9 +345,7 @@ public class ListActivity extends TabActivity{
                 listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        Log.d("noCechk1!!!!!!!!!!!!!",noCheck);
                         noCheck = memoList.get(i).get("no").toString();
-                        Log.d("noCechk2!!!!!!!!!!!!!",noCheck);
                         return false;
                     }
                 });
