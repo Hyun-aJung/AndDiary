@@ -42,9 +42,9 @@ import java.util.HashMap;
  */
 @SuppressWarnings("deprecation")
 public class ListActivity extends TabActivity{
-    ArrayList<HashMap<String,String>> memoList;
+    ArrayList<HashMap<String,String>> memoList, postList;
 
-    AsyncTask<?,?,?> task;
+    AsyncTask<?,?,?> task,taskPost;
 ////////
     LinearLayout layoutDraw;
     Button btnMemoNew,btnPostNew,btnDrawNew, btnDrawPre, btnDrawNext;
@@ -59,12 +59,13 @@ public class ListActivity extends TabActivity{
 
     Intent intent;
     String userId;
-    ListView listView;
-    CustomWidgetAdapter adapter;
+    static String noCheck="-1";
+    static String postCheck="-1";
+    ListView listView,listViewPost;
+    CustomWidgetAdapter adapter, adapterPost;
+
     int listNum;
     final int MEMO=0,DRAW=1,POST=2,SET=3;
-    static String noCheck="-1";
-
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -100,7 +101,14 @@ public class ListActivity extends TabActivity{
                     startActivity(intent);
                     finish();
                 }else if(deleteContextCheck.equals("post")){//Post 롱클릭 삭제
-
+                    if (!postCheck.equals(-1)) {
+                        task = new DeletePostTask().execute(postCheck);
+                        Intent mIntent = new Intent(getApplicationContext(), ListActivity.class);
+                        mIntent.putExtra("userId", userId);
+                        mIntent.putExtra("list", POST);
+                        startActivity(mIntent);
+                        finish();
+                    }
                 }
 
                 return true;
@@ -138,20 +146,27 @@ public class ListActivity extends TabActivity{
 
         //Memo 애들 선언
         btnMemoNew = (Button) findViewById(R.id.btnMemoNew);
-        btnPostNew = (Button) findViewById(R.id.btnPostNew);
-        btnDrawNew = (Button) findViewById(R.id.btnDrawNew);
         listView = (ListView) findViewById(R.id.listViewMemo);
         adapter = new CustomWidgetAdapter(getApplicationContext());
         listView.setAdapter(adapter);
         task = new ReadMemoTask().execute(userId);
 
         //draw애들 선언
+        btnDrawNew = (Button) findViewById(R.id.btnDrawNew);
         btnDrawPre = (Button)findViewById(R.id.btnDrawPre);
         btnDrawNext = (Button)findViewById(R.id.btnDrawNext);
         edtDrawTitle = (TextView)findViewById(R.id.edtDrawTitle);
         edtDrawDate = (TextView)findViewById(R.id.edtDrawDate);
         myPicture = (CustomListDrawView)findViewById(R.id.myPictureView1);
         layoutDraw = (LinearLayout)findViewById(R.id.layoutDraw);//CustomView 롱클릭 하려고
+
+        //post 선언
+        btnPostNew = (Button) findViewById(R.id.btnPostNew);
+        listViewPost = (ListView) findViewById(R.id.listViewPost);
+        adapterPost = new CustomWidgetAdapter(getApplicationContext());
+        listViewPost.setAdapter(adapterPost);
+        taskPost = new ReadPostTask().execute(userId);
+
 
         //메모버튼 클릭해서 들어왔을때는 메모List띄우기. Default는 memo
         if (listNum == MEMO) tabHost.setCurrentTab(0);
@@ -166,6 +181,7 @@ public class ListActivity extends TabActivity{
         ///Memo일때
         if (tabHost.getCurrentTab() == 0) {
             unregisterForContextMenu(layoutDraw);
+            unregisterForContextMenu(listViewPost);
             registerForContextMenu(listView);
             deleteContextCheck="memo";
             //task = new ReadMemoTask().execute(userId);
@@ -184,8 +200,10 @@ public class ListActivity extends TabActivity{
         //Draw일 떄
         if (tabHost.getCurrentTab() == 1) {
             unregisterForContextMenu(listView);
+            unregisterForContextMenu(listViewPost);
             registerForContextMenu(layoutDraw);
             deleteContextCheck="draw";
+
             imageFiles = new File("/sdcard/drawNote").listFiles();
             imageFname = imageFiles[0].toString();
             myPicture.imagePath = imageFname;
@@ -194,6 +212,7 @@ public class ListActivity extends TabActivity{
             String[] temp1 = temp.split("_");
             String tempDate = temp1[2];
             tempDate = "20"+tempDate.substring(0,2)+"-"+tempDate.substring(2,4)+"-"+tempDate.substring(4,6)+" "+tempDate.substring(6,8)+":"+tempDate.substring(8,10);
+
             edtDrawTitle.setText(temp1[1]);
             edtDrawDate.setText(tempDate);
         }
@@ -250,7 +269,11 @@ public class ListActivity extends TabActivity{
 
         //POST
         if (tabHost.getCurrentTab() == 2) {
-            //TODO tabPost
+            unregisterForContextMenu(listView);
+            unregisterForContextMenu(layoutDraw);
+            registerForContextMenu(listViewPost);
+            deleteContextCheck="post";
+            //taskPost = new ReadPostTask().execute(userId);
         }
         btnPostNew.setOnClickListener(new View.OnClickListener() {// + 버튼누를때 새창 띄워서 새 메모 하기
             @Override
@@ -270,14 +293,17 @@ public class ListActivity extends TabActivity{
             @Override
             public void onTabChanged(String s) {
                 if(s.equals("Memo")){
+                    unregisterForContextMenu(listViewPost);
                     unregisterForContextMenu(layoutDraw);
                     registerForContextMenu(listView);
                     deleteContextCheck="memo";
-                    //task = new ReadMemoTask().execute(userId);
+
                 }else if(s.equals("Draw")){
+                    unregisterForContextMenu(listViewPost);
                     unregisterForContextMenu(listView);
                     registerForContextMenu(layoutDraw);
                     deleteContextCheck="draw";
+
                     imageFiles = new File("/sdcard/drawNote").listFiles();
                     imageFname = imageFiles[0].toString();
                     myPicture.imagePath = imageFname;
@@ -286,9 +312,16 @@ public class ListActivity extends TabActivity{
                     String[] temp1 = temp.split("_");
                     String tempDate = temp1[2];
                     tempDate = "20"+tempDate.substring(0,2)+"-"+tempDate.substring(2,4)+"-"+tempDate.substring(4,6)+" "+tempDate.substring(6,8)+":"+tempDate.substring(8,10);
+
                     edtDrawTitle.setText(temp1[1]);
                     edtDrawDate.setText(tempDate);
+
                 }else if(s.equals("Post")){
+                    unregisterForContextMenu(listView);
+                    unregisterForContextMenu(layoutDraw);
+                    registerForContextMenu(listViewPost);
+                    deleteContextCheck="post";
+                    taskPost = new ReadPostTask().execute(userId);
                 }
             }
         });
@@ -326,6 +359,7 @@ public class ListActivity extends TabActivity{
                 for(int i=0; i<jo.length(); i++) {
                     CustomWidgetRow temp = new CustomWidgetRow(memoList.get(i).get("title"),memoList.get(i).get("memo"),memoList.get(i).get("date"));
                     adapter.add(temp);
+                    adapter.notifyDataSetChanged();
                 }
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -346,6 +380,7 @@ public class ListActivity extends TabActivity{
                     @Override
                     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                         noCheck = memoList.get(i).get("no").toString();
+                        adapter.notifyDataSetChanged();
                         return false;
                     }
                 });
@@ -354,7 +389,7 @@ public class ListActivity extends TabActivity{
 
             }catch (JSONException e){
                 e.getStackTrace();
-                Log.d("??????????","JSONException Error");
+                Log.d("??????????","JSONException Error(Read Memo Task PostExecute)");
             }
         }
 
@@ -393,6 +428,7 @@ public class ListActivity extends TabActivity{
             } catch (MalformedURLException e) {
                 //
             } catch (IOException e) {
+                Log.d("??????????","JSONException Error(Read Memo Task)");
                 //
             } // try
             return myResult;
@@ -446,10 +482,168 @@ public class ListActivity extends TabActivity{
             } catch (MalformedURLException e) {
                 //
             } catch (IOException e) {
+                Log.d("??????????","JSONException Error(Delete Memo Task)");
                 //
             } // try
             return myResult;
         }
     }
+///////////////////////////////////////////////////////////////////////////////POST task
+    private class ReadPostTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... strings) {
+            return HttpPostData(strings[0]);
+        }
 
+        @Override
+        protected void onPostExecute(String s) {
+
+            try{
+                JSONArray jo = new JSONArray(s);
+                memoList = new ArrayList<HashMap<String, String>>();
+                for(int i=0; i<jo.length(); i++){
+                    HashMap<String,String> memoView = new HashMap<String, String>();
+                    JSONObject jsonObject = jo.getJSONObject(i);
+                    memoView.put("title",jsonObject.getString("title"));
+                    memoView.put("memo",jsonObject.getString("memo"));
+                    memoView.put("date",jsonObject.getString("date"));
+
+                    memoView.put("img",jsonObject.getString("img"));
+                    memoView.put("no",jsonObject.getString("no"));
+                    memoView.put("id",jsonObject.getString("id"));
+
+                    memoList.add(memoView);
+                }
+
+                for(int i=0; i<jo.length(); i++) {//listView에 보여줄 용도
+                    CustomWidgetRow temp = new CustomWidgetRow(memoList.get(i).get("title"),memoList.get(i).get("memo"),memoList.get(i).get("date"));
+                    adapterPost.add(temp);
+                    adapterPost.notifyDataSetChanged();
+                }
+                listViewPost.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        Intent intent = new Intent(getApplicationContext(),ReadPostActivity.class);
+                        intent.putExtra("ReadCheck","1");
+                        intent.putExtra("title",memoList.get(i).get("title").toString());
+                        intent.putExtra("memo",memoList.get(i).get("memo").toString());
+                        intent.putExtra("no",memoList.get(i).get("no").toString());
+                        intent.putExtra("id",memoList.get(i).get("id").toString());
+                        intent.putExtra("date",memoList.get(i).get("date").toString());
+                        intent.putExtra("img",memoList.get(i).get("img").toString());
+                        startActivity(intent);
+                        //finish();
+                    }
+                });
+
+                listViewPost.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        postCheck = memoList.get(i).get("no").toString();
+                        adapterPost.notifyDataSetChanged();
+                        return false;
+                    }
+                });
+
+
+
+            }catch (JSONException e){
+                e.getStackTrace();
+                Log.d("??????????","JSONException Error(Read Post Task)");
+            }
+        }
+
+        public String HttpPostData(String str){
+            String myResult="";
+            try{
+                URL url = new URL("http://hyunazi.dothome.co.kr/AndDiary/read_post.php");
+                HttpURLConnection http = (HttpURLConnection)url.openConnection();
+                http.setDefaultUseCaches(false);
+                http.setDoInput(true);
+                http.setDoOutput(true);
+                http.setRequestMethod("POST");
+
+                http.setRequestProperty("content-type",
+                        "application/x-www-form-urlencoded");
+                StringBuffer buffer = new StringBuffer();
+                buffer.append("id").append("=").append(str);
+
+                OutputStreamWriter outStream = new OutputStreamWriter(http.getOutputStream(),"UTF-8");
+                PrintWriter writer = new PrintWriter(outStream);
+                writer.write(buffer.toString());
+                writer.flush();
+
+                InputStreamReader tmp = new InputStreamReader(
+                        http.getInputStream(), "UTF-8");
+                BufferedReader reader = new BufferedReader(tmp);
+                StringBuilder builder = new StringBuilder();
+                String strResult;
+                while ((strResult = reader.readLine()) != null) {
+                    builder.append(strResult + "\n");
+                }
+                myResult = builder.toString();
+
+                Log.d("result", "result : " + myResult);
+
+            } catch (MalformedURLException e) {
+                //
+            } catch (IOException e) {
+                //
+            } // try
+            return myResult;
+        }
+    }
+    private class DeletePostTask extends AsyncTask<String, Void, Void>{
+        @Override
+        protected Void doInBackground(String... strings) {
+            HttpDeleteData(strings[0]);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Toast.makeText(getApplicationContext(),"삭제가 완료되었습니다!",Toast.LENGTH_SHORT).show();
+        }
+
+        public String HttpDeleteData(String str){
+            String myResult="";
+            try{
+                URL url = new URL("http://hyunazi.dothome.co.kr/AndDiary/delete_post.php");
+                HttpURLConnection http = (HttpURLConnection)url.openConnection();
+                http.setDefaultUseCaches(false);
+                http.setDoInput(true);
+                http.setDoOutput(true);
+                http.setRequestMethod("POST");
+
+                http.setRequestProperty("content-type",
+                        "application/x-www-form-urlencoded");
+                StringBuffer buffer = new StringBuffer();
+                buffer.append("no").append("=").append(str);
+
+                OutputStreamWriter outStream = new OutputStreamWriter(http.getOutputStream(),"UTF-8");
+                PrintWriter writer = new PrintWriter(outStream);
+                writer.write(buffer.toString());
+                writer.flush();
+
+                InputStreamReader tmp = new InputStreamReader(
+                        http.getInputStream(), "UTF-8");
+                BufferedReader reader = new BufferedReader(tmp);
+                StringBuilder builder = new StringBuilder();
+                String strResult;
+                while ((strResult = reader.readLine()) != null) {
+                    builder.append(strResult + "\n");
+                }
+                myResult = builder.toString();
+
+                Log.d("result", "result : " + myResult);
+
+            } catch (MalformedURLException e) {
+                //
+            } catch (IOException e) {
+                Log.d("??????????","JSONException Error(Delete Post Task)");
+            } // try
+            return myResult;
+        }
+    }
 }

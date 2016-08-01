@@ -12,12 +12,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -47,6 +49,19 @@ public class CustomWidgetMemoListActivity extends Activity{
         listView = (ListView)findViewById(R.id.listView2);
         adapter = new CustomWidgetAdapter(getApplicationContext());//, R.layout.activity_widget_list_item);
         listView.setAdapter(adapter);
+        try{
+            FileInputStream inFs = openFileInput("id.txt");
+            byte[] txt = new byte[20];
+            inFs.read(txt);
+            String temp = new String(txt);
+
+            USERID = temp.substring(0,temp.indexOf("///"));
+            inFs.close();
+        }catch (IOException e){
+            e.getStackTrace();
+        }
+        Log.d("!!!!!!!!!!!!SaveUser",USERID);
+
         task = new ReadMemoTask().execute(USERID);
     }
 

@@ -39,11 +39,13 @@
         android:theme="@style/Theme.AppCompat" />
 
         <activity android:name=".ReadMemoActivity"/>
+        <activity android:name=".ReadPostActivity"
+            android:theme="@style/Theme.AppCompat" />
         <activity android:name=".ChooseImageActivity"/>
         <activity android:name=".WidgetActivity"/>
         <activity android:name="CustomWidgetMemoListActivity"/>
 
-        <activity android:name="CustomListDrawView"/>
+
     </application>
 
 

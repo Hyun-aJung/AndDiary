@@ -14,6 +14,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.InputStream;
+
 /**
  * Created by 4강의실 on 2016-07-15.
  */
@@ -57,6 +59,16 @@ public class GridViewImg extends BaseAdapter {
             }
             else {
                 bitImg[i] = BitmapFactory.decodeFile(img[i]);
+            }
+        }
+    }
+    public void setBitImgStream(InputStream[] img){ //서버에 있는 이미지 불러올 때 사용
+        for(int i=0; i<img.length;i++){
+            if(img[i]==null){//이미지가 5개 미만으로 선택 되었을 때
+                bitImg[i] = null;
+            }
+            else {
+                bitImg[i] = BitmapFactory.decodeStream(img[i]);
             }
         }
     }

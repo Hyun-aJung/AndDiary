@@ -1,6 +1,7 @@
 package com.app.hyuna.project1;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -57,7 +59,15 @@ public class LoginActivity extends Activity {
 
                 //LoginTask = new LoginTask().execute(id,pw);
                 LoginTask = new LoginTask().execute(userId.getText().toString(),userPw.getText().toString());
+                try {
+                    FileOutputStream outFs = openFileOutput("id.txt", Context.MODE_WORLD_WRITEABLE);
+                    String str = id+"////////////////////";
+                    outFs.write(str.getBytes());
+                    outFs.close();
 
+                }catch (IOException e){
+                    e.getStackTrace();
+                }
             }
         });
 
@@ -82,7 +92,7 @@ public class LoginActivity extends Activity {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 SaveMember save = new SaveMember(id);
                 save.saveMemberJson();
-                intent.putExtra("userId",id);//TODO 없애
+                intent.putExtra("userId",id);
                 startActivity(intent);
                 finish();
             }
