@@ -39,7 +39,7 @@ public class CustomWidgetMemoListActivity extends Activity{
     String tempTitle,tempMemo, tempDate;
     ArrayList<HashMap<String,String>> memoList;
     AsyncTask<?,?,?> task;
-    static String USERID = "1";
+    static String USERID = "!!default!!";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,13 +55,35 @@ public class CustomWidgetMemoListActivity extends Activity{
             String temp = new String(txt);
 
             USERID = temp.substring(0,temp.indexOf("///"));
+
             inFs.close();
         }catch (IOException e){
             e.getStackTrace();
+            SharedPreferences sp = getSharedPreferences("sp", Context.MODE_WORLD_WRITEABLE);
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putString("ListGetTitle","Login First AND");
+            editor.putString("ListGetMemo","Choose What you want!♥3♥");
+            editor.commit();
+
+            Intent intent = new Intent(getApplicationContext(),WidgetMain.class);
+            intent.setAction("android.appwidget.action.APPWIDGET_UPDATE");
+            sendBroadcast(intent);
+            finish();
         }
         Log.d("!!!!!!!!!!!!SaveUser",USERID);
+        if(USERID.equals("!!default!!")){
+            SharedPreferences sp = getSharedPreferences("sp", Context.MODE_WORLD_WRITEABLE);
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putString("ListGetTitle","Login First AND");
+            editor.putString("ListGetMemo","Choose What you want!♥3♥");
+            editor.commit();
 
-        task = new ReadMemoTask().execute(USERID);
+            Intent intent = new Intent(getApplicationContext(),WidgetMain.class);
+            intent.setAction("android.appwidget.action.APPWIDGET_UPDATE");
+            sendBroadcast(intent);
+            finish();
+        }
+        else    task = new ReadMemoTask().execute(USERID);
     }
 
     private class ReadMemoTask extends AsyncTask<String, Void, String> {

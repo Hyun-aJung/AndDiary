@@ -15,10 +15,10 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="New Text"
         android:textColor="@android:color/white"
         android:id="@+id/widgetTitle"
-        android:background="@color/back"/>
+        android:background="@color/back"
+        android:text="Login First AND" />
 
     <TextView
         android:layout_width="match_parent"
@@ -32,8 +32,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="New Text"
         android:textColor="@color/actionbar_text"
         android:id="@+id/widgetMemo"
-        android:background="@color/back"/>
+        android:background="@color/back"
+        android:text="Choose What you want!♥3♥" />
 </LinearLayout>

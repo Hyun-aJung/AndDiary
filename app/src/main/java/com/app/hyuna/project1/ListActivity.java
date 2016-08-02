@@ -2,6 +2,7 @@ package com.app.hyuna.project1;
 
 
 import android.app.TabActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -73,7 +75,7 @@ public class ListActivity extends TabActivity{
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater menuInflater = getMenuInflater();
-        //menu.setHeaderIcon() //TODO
+        menu.setHeaderIcon(R.drawable.mnpd);
         menu.setHeaderTitle("삭제하시겠습니까?");
         menuInflater.inflate(R.menu.menu1,menu);
     }
@@ -303,6 +305,16 @@ public class ListActivity extends TabActivity{
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                try {
+                    FileOutputStream outFs = openFileOutput("id.txt", Context.MODE_WORLD_WRITEABLE);
+                    String str = "!!default!!"+"////////////////////";
+                    outFs.write(str.getBytes());
+                    outFs.close();
+
+                }catch (IOException e){
+                    e.getStackTrace();
+                }
+
                 Intent intent = new Intent(ListActivity.this,LoginActivity.class);
                 startActivity(intent);
                 finish();

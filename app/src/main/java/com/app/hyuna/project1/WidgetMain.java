@@ -41,7 +41,7 @@ public class WidgetMain extends AppWidgetProvider {
 
     private void refresh(Context context, RemoteViews remoteViews) {
         SharedPreferences sp = context.getSharedPreferences("sp", Context.MODE_WORLD_WRITEABLE);
-        remoteViews.setTextViewText(R.id.widgetTitle, sp.getString("ListGetTitle", "Touch this AND"));
+        remoteViews.setTextViewText(R.id.widgetTitle, sp.getString("ListGetTitle", "Login First AND"));
         remoteViews.setTextViewText(R.id.widgetMemo, sp.getString("ListGetMemo","Choose What you want!♥3♥"));
     }
 
