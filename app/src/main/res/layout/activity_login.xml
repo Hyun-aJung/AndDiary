@@ -2,19 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/back">
+    android:background="@android:color/white">
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1.8"></LinearLayout>
+        android:layout_weight="1.2"></LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.7">
+        android:layout_weight="1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView34"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.6" />
 
         <TextView
             android:layout_width="40dp"
@@ -22,7 +29,7 @@
             android:text="I  D"
             android:id="@+id/textView"
             android:textSize="23dp"
-            android:layout_marginStart="60dp"
+
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
             android:layout_gravity="center" />
@@ -34,14 +41,29 @@
             android:layout_above="@+id/textView2"
             android:layout_toEndOf="@+id/textView2"
             android:layout_marginStart="40dp"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView33"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.6" />
     </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.7">
+        android:layout_weight="1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView35"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.6" />
 
         <TextView
             android:layout_width="40dp"
@@ -51,7 +73,6 @@
             android:textSize="23dp"
             android:layout_below="@+id/textView"
             android:layout_alignStart="@+id/textView"
-            android:layout_marginLeft="60dp"
             android:layout_gravity="center" />
 
         <EditText
@@ -60,8 +81,18 @@
             android:id="@+id/txtPw"
             android:layout_alignTop="@+id/textView2"
             android:layout_alignStart="@+id/txtId"
+            android:inputType="textPassword"
             android:layout_marginLeft="40dp"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView32"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.6" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -72,7 +103,7 @@
         android:layout_weight="2">
 
         <TextView
-            android:layout_width="60dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textView3"
             android:layout_gravity="center_vertical"
@@ -83,7 +114,7 @@
             android:layout_height="wrap_content"
             android:text="Join"
             android:id="@+id/btJoin"
-            android:background="@color/second"
+            android:background="@color/back"
             android:layout_below="@+id/txtPw"
             android:layout_toEndOf="@+id/textView"
             android:layout_gravity="center"
@@ -101,7 +132,7 @@
             android:layout_weight="1" />
 
         <TextView
-            android:layout_width="60dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textView4"
             android:layout_gravity="center_vertical"

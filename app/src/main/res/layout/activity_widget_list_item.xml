@@ -14,15 +14,16 @@
             android:id="@+id/title"
             android:layout_weight="1"
             android:textColor="@android:color/black"
-            android:textSize="20dp" />
+            android:textSize="15dp"
+            android:layout_marginLeft="20dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="   "
             android:id="@+id/date"
-            android:layout_weight="1"
-            android:textColor="@color/second" />
+            android:textColor="@color/second"
+            android:layout_marginRight="20dp" />
     </LinearLayout>
 
     <TextView
@@ -30,7 +31,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/memo"
         android:layout_weight="6"
-        android:textColor="@android:color/black"
-        android:textSize="20dp" />
+        android:textColor="@color/memoGray"
+        android:textSize="15dp"
+        android:layout_marginLeft="30dp" />
 
 </LinearLayout>

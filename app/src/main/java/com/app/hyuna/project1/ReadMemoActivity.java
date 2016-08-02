@@ -48,7 +48,6 @@ public class ReadMemoActivity extends Activity {
         btnSave = (Button)findViewById(R.id.btnSave);
 
         edtTitle.setText(title);
-
         edtMemo.setText(memo);
 
         btnSave.setText("update");

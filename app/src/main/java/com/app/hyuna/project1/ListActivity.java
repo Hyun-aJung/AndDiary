@@ -42,7 +42,7 @@ import java.util.HashMap;
  */
 @SuppressWarnings("deprecation")
 public class ListActivity extends TabActivity{
-    ArrayList<HashMap<String,String>> memoList, postList;
+    ArrayList<HashMap<String,String>> memoList, memoListPost;
 
     AsyncTask<?,?,?> task,taskPost;
 ////////
@@ -63,6 +63,8 @@ public class ListActivity extends TabActivity{
     static String postCheck="-1";
     ListView listView,listViewPost;
     CustomWidgetAdapter adapter, adapterPost;
+
+    TextView logout;
 
     int listNum;
     final int MEMO=0,DRAW=1,POST=2,SET=3;
@@ -140,7 +142,7 @@ public class ListActivity extends TabActivity{
         TabHost.TabSpec tabSpecPost = tabHost.newTabSpec("Post").setIndicator("POST").setContent(R.id.tabPost);
         tabHost.addTab(tabSpecPost);
 
-        TabHost.TabSpec tabSpecSet = tabHost.newTabSpec("Set").setIndicator("SETTING").setContent(R.id.tabSet);
+        TabHost.TabSpec tabSpecSet = tabHost.newTabSpec("Set").setIndicator("SET").setContent(R.id.tabSet);
         tabHost.addTab(tabSpecSet);
         //탭호스트 상단메뉴바 만들기 끝
 
@@ -167,6 +169,9 @@ public class ListActivity extends TabActivity{
         listViewPost.setAdapter(adapterPost);
         taskPost = new ReadPostTask().execute(userId);
 
+        //Set 선언
+        logout = (TextView)findViewById(R.id.logout);
+
 
         //메모버튼 클릭해서 들어왔을때는 메모List띄우기. Default는 memo
         if (listNum == MEMO) tabHost.setCurrentTab(0);
@@ -191,7 +196,9 @@ public class ListActivity extends TabActivity{
             public void onClick(View view) {
                 Intent intent = new Intent(ListActivity.this, WriteMemoActivity.class);
                 intent.putExtra("userId", userId);
-                startActivityForResult(intent, 0);
+                //startActivityForResult(intent, 0);
+                startActivity(intent);
+                finish();
             }
         });
 
@@ -222,6 +229,7 @@ public class ListActivity extends TabActivity{
                 Intent intent = new Intent(ListActivity.this, WriteDrawActivity.class);
                 intent.putExtra("userId", userId);
                 startActivity(intent);
+                finish();
             }
         });
         btnDrawPre.setOnClickListener(new View.OnClickListener() {
@@ -281,12 +289,25 @@ public class ListActivity extends TabActivity{
                 Intent intent = new Intent(ListActivity.this, WritePostActivity.class);
                 intent.putExtra("userId", userId);
                 startActivity(intent);
+                finish();
             }
         });
 
+
+        //Set
         if (tabHost.getCurrentTab() == 3) {
-            //TODO tabSet
+            unregisterForContextMenu(listView);
+            unregisterForContextMenu(layoutDraw);
+            unregisterForContextMenu(listViewPost);
         }
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ListActivity.this,LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
 
         tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
@@ -322,6 +343,10 @@ public class ListActivity extends TabActivity{
                     registerForContextMenu(listViewPost);
                     deleteContextCheck="post";
                     taskPost = new ReadPostTask().execute(userId);
+                }else if(s.equals("Set")){
+                    unregisterForContextMenu(listView);
+                    unregisterForContextMenu(layoutDraw);
+                    unregisterForContextMenu(listViewPost);
                 }
             }
         });
@@ -332,7 +357,7 @@ public class ListActivity extends TabActivity{
     private class ReadMemoTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... strings) {
-            return HttpPostData(strings[0]);
+            return HttpPost1Data(strings[0]);
         }
 
         @Override
@@ -372,7 +397,7 @@ public class ListActivity extends TabActivity{
                         intent.putExtra("id",memoList.get(i).get("id").toString());
                         intent.putExtra("date",memoList.get(i).get("date").toString());
                         startActivity(intent);
-                        finish();
+                        //finish();
                     }
                 });
 
@@ -393,7 +418,7 @@ public class ListActivity extends TabActivity{
             }
         }
 
-        public String HttpPostData(String str){
+        public String HttpPost1Data(String str){
             String myResult="";
             try{
                 URL url = new URL("http://hyunazi.dothome.co.kr/AndDiary/read_memo.php");
@@ -500,7 +525,7 @@ public class ListActivity extends TabActivity{
 
             try{
                 JSONArray jo = new JSONArray(s);
-                memoList = new ArrayList<HashMap<String, String>>();
+                memoListPost = new ArrayList<HashMap<String, String>>();
                 for(int i=0; i<jo.length(); i++){
                     HashMap<String,String> memoView = new HashMap<String, String>();
                     JSONObject jsonObject = jo.getJSONObject(i);
@@ -512,11 +537,11 @@ public class ListActivity extends TabActivity{
                     memoView.put("no",jsonObject.getString("no"));
                     memoView.put("id",jsonObject.getString("id"));
 
-                    memoList.add(memoView);
+                    memoListPost.add(memoView);
                 }
 
                 for(int i=0; i<jo.length(); i++) {//listView에 보여줄 용도
-                    CustomWidgetRow temp = new CustomWidgetRow(memoList.get(i).get("title"),memoList.get(i).get("memo"),memoList.get(i).get("date"));
+                    CustomWidgetRow temp = new CustomWidgetRow(memoListPost.get(i).get("title"),memoListPost.get(i).get("memo"),memoListPost.get(i).get("date"));
                     adapterPost.add(temp);
                     adapterPost.notifyDataSetChanged();
                 }
@@ -525,12 +550,12 @@ public class ListActivity extends TabActivity{
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         Intent intent = new Intent(getApplicationContext(),ReadPostActivity.class);
                         intent.putExtra("ReadCheck","1");
-                        intent.putExtra("title",memoList.get(i).get("title").toString());
-                        intent.putExtra("memo",memoList.get(i).get("memo").toString());
-                        intent.putExtra("no",memoList.get(i).get("no").toString());
-                        intent.putExtra("id",memoList.get(i).get("id").toString());
-                        intent.putExtra("date",memoList.get(i).get("date").toString());
-                        intent.putExtra("img",memoList.get(i).get("img").toString());
+                        intent.putExtra("title",memoListPost.get(i).get("title").toString());
+                        intent.putExtra("memo",memoListPost.get(i).get("memo").toString());
+                        intent.putExtra("no",memoListPost.get(i).get("no").toString());
+                        intent.putExtra("id",memoListPost.get(i).get("id").toString());
+                        intent.putExtra("date",memoListPost.get(i).get("date").toString());
+                        intent.putExtra("img",memoListPost.get(i).get("img").toString());
                         startActivity(intent);
                         //finish();
                     }
@@ -539,7 +564,7 @@ public class ListActivity extends TabActivity{
                 listViewPost.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        postCheck = memoList.get(i).get("no").toString();
+                        postCheck = memoListPost.get(i).get("no").toString();
                         adapterPost.notifyDataSetChanged();
                         return false;
                     }

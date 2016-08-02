@@ -141,9 +141,6 @@ public class WriteDrawActivity extends Activity {
                 }
                 //sd카드에 저장 완료
                 task = new SavePostTask().execute(userId,title,fileName);
-
-
-
             }
         });
     }
