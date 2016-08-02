@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -67,7 +69,9 @@ public class LoginActivity extends Activity {
                     String str = id+"////////////////////";
                     outFs.write(str.getBytes());
                     outFs.close();
-
+                    String path = Environment.getExternalStorageDirectory().getAbsolutePath();
+                    File f = new File(path+"/drawNote");
+                    f.mkdir();
                 }catch (IOException e){
                     e.getStackTrace();
                 }

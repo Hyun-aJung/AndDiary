@@ -138,7 +138,6 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
-                                    android:text="title"
                                     android:id="@+id/edtDrawTitle"
                                     android:textSize="18dp"
                                     android:layout_weight="1" />
@@ -146,9 +145,9 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
-                                    android:text="date"
                                     android:id="@+id/edtDrawDate"
-                                    android:textColor="@color/second" />
+                                    android:textColor="@color/second"
+                                    android:text="+를 눌러 그림메모를 추가하세요" />
                             </LinearLayout>
                             <TextView
                                 android:layout_width="wrap_content"

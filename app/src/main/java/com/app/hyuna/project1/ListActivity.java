@@ -75,7 +75,7 @@ public class ListActivity extends TabActivity{
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater menuInflater = getMenuInflater();
-        menu.setHeaderIcon(R.drawable.mnpd);
+//        menu.setHeaderIcon(R.drawable.ic);
         menu.setHeaderTitle("삭제하시겠습니까?");
         menuInflater.inflate(R.menu.menu1,menu);
     }
@@ -214,16 +214,22 @@ public class ListActivity extends TabActivity{
             deleteContextCheck="draw";
 
             imageFiles = new File("/sdcard/drawNote").listFiles();
-            imageFname = imageFiles[0].toString();
-            myPicture.imagePath = imageFname;
-            int indexCount = imageFname.lastIndexOf("/");
-            String temp = imageFname.substring(indexCount+1);
-            String[] temp1 = temp.split("_");
-            String tempDate = temp1[2];
-            tempDate = "20"+tempDate.substring(0,2)+"-"+tempDate.substring(2,4)+"-"+tempDate.substring(4,6)+" "+tempDate.substring(6,8)+":"+tempDate.substring(8,10);
+            Log.d("!!!!!!!!!!!file",imageFiles.length+"");
+            if(imageFiles.length>0) {
+                imageFname = imageFiles[0].toString();
+                myPicture.imagePath = imageFname;
+                int indexCount = imageFname.lastIndexOf("/");
+                String temp = imageFname.substring(indexCount + 1);
+                String[] temp1 = temp.split("_");
+                String tempDate = temp1[2];
+                tempDate = "20" + tempDate.substring(0, 2) + "-" + tempDate.substring(2, 4) + "-" + tempDate.substring(4, 6) + " " + tempDate.substring(6, 8) + ":" + tempDate.substring(8, 10);
 
-            edtDrawTitle.setText(temp1[1]);
-            edtDrawDate.setText(tempDate);
+                edtDrawTitle.setText(temp1[1]);
+                edtDrawDate.setText(tempDate);
+            }else{
+                btnDrawNext.setEnabled(false);
+                btnDrawPre.setEnabled(false);
+            }
         }
         btnDrawNew.setOnClickListener(new View.OnClickListener() {// + 버튼누를때 새창 띄워서 새 메모 하기
             @Override
@@ -338,23 +344,27 @@ public class ListActivity extends TabActivity{
                     deleteContextCheck="draw";
 
                     imageFiles = new File("/sdcard/drawNote").listFiles();
-                    imageFname = imageFiles[0].toString();
-                    myPicture.imagePath = imageFname;
-                    int indexCount = imageFname.lastIndexOf("/");
-                    String temp = imageFname.substring(indexCount+1);
-                    String[] temp1 = temp.split("_");
-                    String tempDate = temp1[2];
-                    tempDate = "20"+tempDate.substring(0,2)+"-"+tempDate.substring(2,4)+"-"+tempDate.substring(4,6)+" "+tempDate.substring(6,8)+":"+tempDate.substring(8,10);
+                    if(imageFiles.length>0) {
+                        imageFname = imageFiles[0].toString();
+                        myPicture.imagePath = imageFname;
+                        int indexCount = imageFname.lastIndexOf("/");
+                        String temp = imageFname.substring(indexCount + 1);//이미지 이름만 추출
+                        String[] temp1 = temp.split("_");
+                        String tempDate = temp1[2];
+                        tempDate = "20" + tempDate.substring(0, 2) + "-" + tempDate.substring(2, 4) + "-" + tempDate.substring(4, 6) + " " + tempDate.substring(6, 8) + ":" + tempDate.substring(8, 10);
 
-                    edtDrawTitle.setText(temp1[1]);
-                    edtDrawDate.setText(tempDate);
+                        edtDrawTitle.setText(temp1[1]);
+                        edtDrawDate.setText(tempDate);
+                    }else{
+                        btnDrawNext.setEnabled(false);
+                        btnDrawPre.setEnabled(false);
+                    }
 
                 }else if(s.equals("Post")){
                     unregisterForContextMenu(listView);
                     unregisterForContextMenu(layoutDraw);
                     registerForContextMenu(listViewPost);
                     deleteContextCheck="post";
-                    taskPost = new ReadPostTask().execute(userId);
                 }else if(s.equals("Set")){
                     unregisterForContextMenu(listView);
                     unregisterForContextMenu(layoutDraw);
@@ -374,10 +384,6 @@ public class ListActivity extends TabActivity{
 
         @Override
         protected void onPostExecute(String s) {
-//            Gson gson = new Gson();
-//            Type collectionType = new TypeToken<MemoVO>(){}.getType();
-//            List<MemoVO> lists = gson.fromJson(s,collectionType);
-
             try{
                 JSONArray jo = new JSONArray(s);
                 memoList = new ArrayList<HashMap<String, String>>();
@@ -463,11 +469,9 @@ public class ListActivity extends TabActivity{
                 Log.d("result", "result : " + myResult);
 
             } catch (MalformedURLException e) {
-                //
             } catch (IOException e) {
                 Log.d("??????????","JSONException Error(Read Memo Task)");
-                //
-            } // try
+            }
             return myResult;
         }
     }
