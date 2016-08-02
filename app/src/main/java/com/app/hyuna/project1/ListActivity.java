@@ -54,7 +54,8 @@ public class ListActivity extends TabActivity{
     CustomListDrawView myPicture;
     File[] imageFiles;
     String imageFname;
-    int drawNum;
+    int drawNum=0;
+    static int COUNT = -1;
 ///////이 블락 draw 애들
 
     String deleteContextCheck="";
@@ -214,18 +215,31 @@ public class ListActivity extends TabActivity{
             deleteContextCheck="draw";
 
             imageFiles = new File("/sdcard/drawNote").listFiles();
-            Log.d("!!!!!!!!!!!file",imageFiles.length+"");
             if(imageFiles.length>0) {
-                imageFname = imageFiles[0].toString();
-                myPicture.imagePath = imageFname;
-                int indexCount = imageFname.lastIndexOf("/");
-                String temp = imageFname.substring(indexCount + 1);
-                String[] temp1 = temp.split("_");
-                String tempDate = temp1[2];
-                tempDate = "20" + tempDate.substring(0, 2) + "-" + tempDate.substring(2, 4) + "-" + tempDate.substring(4, 6) + " " + tempDate.substring(6, 8) + ":" + tempDate.substring(8, 10);
+                for (int i = 0; i < imageFiles.length; i++) {
+                    imageFname = imageFiles[i].toString();
 
-                edtDrawTitle.setText(temp1[1]);
-                edtDrawDate.setText(tempDate);
+                    int indexCount = imageFname.lastIndexOf("/");
+                    String temp = imageFname.substring(indexCount + 1);//이미지 이름만 추출
+                    String[] temp1 = temp.split("_");
+                    if (temp1[0].equals(userId)) {//첫 이미지는 내가 그린 이미지를 보여주기
+                        String tempDate = temp1[2];
+                        tempDate = "20" + tempDate.substring(0, 2) + "-" + tempDate.substring(2, 4) + "-" + tempDate.substring(4, 6) + " " + tempDate.substring(6, 8) + ":" + tempDate.substring(8, 10);
+                        myPicture.imagePath = imageFname;
+                        edtDrawTitle.setText(temp1[1]);
+                        edtDrawDate.setText(tempDate);
+                        COUNT = i;
+                        drawNum =COUNT;
+                        Log.d("!!!!count",COUNT+" "+temp1[1]);
+                        break;
+                    }
+                }if(COUNT<0) {
+                    btnDrawNext.setEnabled(false);
+                    btnDrawPre.setEnabled(false);
+                }else if(COUNT>=0){
+                    btnDrawNext.setEnabled(true);
+                    btnDrawPre.setEnabled(true);
+                }
             }else{
                 btnDrawNext.setEnabled(false);
                 btnDrawPre.setEnabled(false);
@@ -243,40 +257,59 @@ public class ListActivity extends TabActivity{
         btnDrawPre.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(drawNum<=0){
+                if(drawNum<=0 || drawNum<=COUNT){
                     Toast.makeText(getApplicationContext(),"첫번째 입니다.",Toast.LENGTH_SHORT).show();
                 }else{
-                    drawNum--;
-                    imageFname = imageFiles[drawNum].toString();
-                    myPicture.imagePath = imageFname;
-                    myPicture.invalidate();
-                    int indexCount = imageFname.lastIndexOf("/");
-                    String temp = imageFname.substring(indexCount+1);
-                    String[] temp1 = temp.split("_");
-                    String tempDate = temp1[2];
-                    tempDate = "20"+tempDate.substring(0,2)+"-"+tempDate.substring(2,4)+"-"+tempDate.substring(4,6)+" "+tempDate.substring(6,8)+":"+tempDate.substring(8,10);
-                    edtDrawTitle.setText(temp1[1]);
-                    edtDrawDate.setText(tempDate);
+                    while(drawNum>0 && drawNum>=COUNT) {
+                        drawNum--;
+                        imageFname = imageFiles[drawNum].toString();
+                        int indexCount = imageFname.lastIndexOf("/");
+                        String temp = imageFname.substring(indexCount + 1);
+                        String[] temp1 = temp.split("_");
+
+                        if (temp1[0].equals(userId)) {
+                            String tempDate = temp1[2];
+                            tempDate = "20" + tempDate.substring(0, 2) + "-" + tempDate.substring(2, 4) + "-" + tempDate.substring(4, 6) + " " + tempDate.substring(6, 8) + ":" + tempDate.substring(8, 10);
+                            myPicture.imagePath = imageFname;
+                            myPicture.invalidate();
+                            edtDrawTitle.setText(temp1[1]);
+                            edtDrawDate.setText(tempDate);
+                            break;
+                        }
+
+                        if(drawNum<=0 || drawNum<=COUNT){
+                            Toast.makeText(getApplicationContext(),"첫번째 입니다.",Toast.LENGTH_SHORT).show();
+                        }
+                    }
                 }
             }
         });
         btnDrawNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(drawNum>=imageFiles.length-1){
+                if(drawNum>imageFiles.length-2){
                     Toast.makeText(getApplicationContext(),"마지막 입니다.",Toast.LENGTH_SHORT).show();
                 }else{
-                    drawNum++;
-                    imageFname = imageFiles[drawNum].toString();
-                    myPicture.imagePath = imageFname;
-                    myPicture.invalidate();
-                    int indexCount = imageFname.lastIndexOf("/");
-                    String temp = imageFname.substring(indexCount+1);
-                    String[] temp1 = temp.split("_");
-                    String tempDate = temp1[2];
-                    tempDate = "20"+tempDate.substring(0,2)+"-"+tempDate.substring(2,4)+"-"+tempDate.substring(4,6)+" "+tempDate.substring(6,8)+":"+tempDate.substring(8,10);
-                    edtDrawTitle.setText(temp1[1]);
-                    edtDrawDate.setText(tempDate);
+                    while(drawNum<=imageFiles.length-1) {
+                        drawNum++;
+                        imageFname = imageFiles[drawNum].toString();
+                        int indexCount = imageFname.lastIndexOf("/");
+                        String temp = imageFname.substring(indexCount + 1);
+                        String[] temp1 = temp.split("_");
+                        if(temp1[0].equals(userId)) {
+                            String tempDate = temp1[2];
+                            tempDate = "20" + tempDate.substring(0, 2) + "-" + tempDate.substring(2, 4) + "-" + tempDate.substring(4, 6) + " " + tempDate.substring(6, 8) + ":" + tempDate.substring(8, 10);
+                            myPicture.imagePath = imageFname;
+                            myPicture.invalidate();
+                            edtDrawTitle.setText(temp1[1]);
+                            edtDrawDate.setText(tempDate);
+                            break;
+                        }
+                        if(drawNum>imageFiles.length-2) {
+                            Toast.makeText(getApplicationContext(), "마지막 입니다.", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                    }
                 }
             }
         });
@@ -345,16 +378,30 @@ public class ListActivity extends TabActivity{
 
                     imageFiles = new File("/sdcard/drawNote").listFiles();
                     if(imageFiles.length>0) {
-                        imageFname = imageFiles[0].toString();
-                        myPicture.imagePath = imageFname;
-                        int indexCount = imageFname.lastIndexOf("/");
-                        String temp = imageFname.substring(indexCount + 1);//이미지 이름만 추출
-                        String[] temp1 = temp.split("_");
-                        String tempDate = temp1[2];
-                        tempDate = "20" + tempDate.substring(0, 2) + "-" + tempDate.substring(2, 4) + "-" + tempDate.substring(4, 6) + " " + tempDate.substring(6, 8) + ":" + tempDate.substring(8, 10);
+                        for (int i = 0; i < imageFiles.length; i++) {
+                            imageFname = imageFiles[i].toString();
 
-                        edtDrawTitle.setText(temp1[1]);
-                        edtDrawDate.setText(tempDate);
+                            int indexCount = imageFname.lastIndexOf("/");
+                            String temp = imageFname.substring(indexCount + 1);//이미지 이름만 추출
+                            String[] temp1 = temp.split("_");
+                            if (temp1[0].equals(userId)) {//첫 이미지는 내가 그린 이미지를 보여주기
+                                String tempDate = temp1[2];
+                                tempDate = "20" + tempDate.substring(0, 2) + "-" + tempDate.substring(2, 4) + "-" + tempDate.substring(4, 6) + " " + tempDate.substring(6, 8) + ":" + tempDate.substring(8, 10);
+                                myPicture.imagePath = imageFname;
+                                edtDrawTitle.setText(temp1[1]);
+                                edtDrawDate.setText(tempDate);
+                                COUNT = i;
+                                drawNum =COUNT;
+                                Log.d("!!!!count",COUNT+" "+temp1[1]);
+                                break;
+                            }
+                        }if(COUNT<0) {
+                            btnDrawNext.setEnabled(false);
+                            btnDrawPre.setEnabled(false);
+                        }else if(COUNT>=0){
+                            btnDrawNext.setEnabled(true);
+                            btnDrawPre.setEnabled(true);
+                        }
                     }else{
                         btnDrawNext.setEnabled(false);
                         btnDrawPre.setEnabled(false);
