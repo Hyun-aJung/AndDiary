@@ -18,6 +18,8 @@ public class MainActivity extends Activity {
     String userId;
     ImageButton btnDraw,btnSet,btnShort,btnPost;
     final int MEMO=0,DRAW=1,POST=2,SET=3;
+    private BackPressCloseHandler backPressCloseHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +31,8 @@ public class MainActivity extends Activity {
         btnDraw =  (ImageButton) findViewById(R.id.btnDraw);
         btnPost =  (ImageButton) findViewById(R.id.btnPost);
         btnSet  =  (ImageButton) findViewById(R.id.btnSet);
+
+        backPressCloseHandler = new BackPressCloseHandler(this);
 
         DisplayMetrics displayMetrics = new DisplayMetrics();//Display size구해서 이쁘게 배치할거야 버튼
         WindowManager windowManager = (WindowManager)getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
@@ -80,5 +84,10 @@ public class MainActivity extends Activity {
 
 
 
+    }
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        backPressCloseHandler.onBackPressed();
     }
 }

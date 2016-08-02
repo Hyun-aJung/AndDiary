@@ -12,16 +12,27 @@ import android.widget.LinearLayout;
  */
 public class IntroActivity extends Activity {
     LinearLayout layout;
+    private BackPressCloseHandler backPressCloseHandler;
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        backPressCloseHandler.onBackPressed();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
+
+        backPressCloseHandler = new BackPressCloseHandler(this);
+
         layout = (LinearLayout)findViewById(R.id.baseLayout);
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent mIntent = new Intent(IntroActivity.this, LoginActivity.class);
                 startActivity(mIntent);
+                finish();
             }
         });
 

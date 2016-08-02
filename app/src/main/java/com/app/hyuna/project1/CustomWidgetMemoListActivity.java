@@ -45,7 +45,6 @@ public class CustomWidgetMemoListActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_widget_list);
-
         listView = (ListView)findViewById(R.id.listView2);
         adapter = new CustomWidgetAdapter(getApplicationContext());//, R.layout.activity_widget_list_item);
         listView.setAdapter(adapter);
@@ -89,6 +88,7 @@ public class CustomWidgetMemoListActivity extends Activity{
                 for(int i=0; i<jo.length(); i++) {
                     CustomWidgetRow temp = new CustomWidgetRow(memoList.get(i).get("title"),memoList.get(i).get("memo"),memoList.get(i).get("date"));
                     adapter.add(temp);
+                    adapter.notifyDataSetChanged();
                 }
 
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {//바탕화면 위젯으로연동
@@ -104,6 +104,7 @@ public class CustomWidgetMemoListActivity extends Activity{
                         intent.setAction("android.appwidget.action.APPWIDGET_UPDATE");
                         sendBroadcast(intent);
                         finish();
+
                     }
                 });
 

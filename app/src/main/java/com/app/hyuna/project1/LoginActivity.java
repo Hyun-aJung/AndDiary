@@ -34,6 +34,7 @@ public class LoginActivity extends Activity {
     String id, pw;
     boolean loginOk = false;
     AsyncTask<?,?,?> LoginTask;
+    private BackPressCloseHandler backPressCloseHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,8 @@ public class LoginActivity extends Activity {
         btLog = (Button)findViewById(R.id.btLogin);
         userId = (EditText)findViewById(R.id.txtId);
         userPw = (EditText)findViewById(R.id.txtPw);
+
+        backPressCloseHandler = new BackPressCloseHandler(this);
 
         btJoin.setOnClickListener(new View.OnClickListener() { //Join버튼 누르면 회원가입창 띄우기
             @Override
@@ -72,7 +75,11 @@ public class LoginActivity extends Activity {
         });
 
     }
-
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        backPressCloseHandler.onBackPressed();
+    }
     private class LoginTask extends AsyncTask<String, Void, String>{
         @Override
         protected String doInBackground(String... strings) {
@@ -131,7 +138,7 @@ public class LoginActivity extends Activity {
             }
             myResult = builder.toString();
 
-            Log.d("resultLogin", "result : " + myResult);
+            Log.d("resultLogin PW", "result : " + myResult);
         } catch (MalformedURLException e) {
             e.getStackTrace();
         } catch (IOException e) {

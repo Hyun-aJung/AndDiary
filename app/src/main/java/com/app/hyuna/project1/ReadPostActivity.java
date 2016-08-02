@@ -24,6 +24,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -218,10 +219,11 @@ public class ReadPostActivity extends Activity {
     }
 
     private class loadImgTask extends AsyncTask<String, Void, Void>{
+        InputStream[] is = {null,null,null,null,null};
         @Override
         protected Void doInBackground(String... strings) {
             String[] temp = strings[0].split(",");
-            InputStream[] is = {null,null,null,null,null};
+
             try {
                 for (int i = 0; i < temp.length; i++) {
                     String url = "http://hyunazi.dothome.co.kr/AndDiary/imgBox/" + temp[i];
@@ -241,7 +243,19 @@ public class ReadPostActivity extends Activity {
             super.onPostExecute(aVoid);
             grid.setDisplaySize(deviceWidth,deviceWidth);
             gridView.setAdapter(grid);
-
+            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    View dialogView = (View)View.inflate(getApplicationContext(),R.layout.activity_dialog,null);
+                    AlertDialog.Builder dlg = new AlertDialog.Builder(ReadPostActivity.this);
+                    ImageView ivPoster = (ImageView)dialogView.findViewById(R.id.imageView);
+                    ivPoster.setImageBitmap(BitmapFactory.decodeStream(is[i]));
+                    dlg.setTitle("Selected Image");
+                    dlg.setView(dialogView);
+                    dlg.setNegativeButton("CLOSE",null);
+                    dlg.show();
+                }
+            });
         }
     }
 
