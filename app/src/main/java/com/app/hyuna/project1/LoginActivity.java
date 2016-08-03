@@ -59,11 +59,11 @@ public class LoginActivity extends Activity {
         btLog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                id = userId.getText().toString();
-                pw = userPw.getText().toString();
+                id = userId.getText().toString().trim();
+                pw = userPw.getText().toString().trim();
 
                 //LoginTask = new LoginTask().execute(id,pw);
-                LoginTask = new LoginTask().execute(userId.getText().toString(),userPw.getText().toString());
+                LoginTask = new LoginTask().execute(id,pw);
                 try {
                     FileOutputStream outFs = openFileOutput("id.txt", Context.MODE_WORLD_WRITEABLE);
                     String str = id+"////////////////////";
@@ -101,8 +101,8 @@ public class LoginActivity extends Activity {
             }
             if(loginOk) {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                SaveMember save = new SaveMember(id);
-                save.saveMemberJson();
+                //SaveMember save = new SaveMember(id);
+                ///save.saveMemberJson();
                 intent.putExtra("userId",id);
                 startActivity(intent);
                 finish();

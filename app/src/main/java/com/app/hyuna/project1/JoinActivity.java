@@ -29,7 +29,9 @@ public class JoinActivity extends Activity {
     Button btJoin, btCancel, btCheck;
     String p1, p2, email,id,pw,name,mail;
     boolean mailCheck = false, nameCheck = false, pwCheck = false, idCheck = false;
-    AsyncTask<?, ?, ?> joinTask;
+    AsyncTask<?, ?, ?> joinTask, task;
+    static int count=-1;
+    String myResult1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,26 +49,14 @@ public class JoinActivity extends Activity {
         txtMail = (EditText) findViewById(R.id.txtMail);
 
         btJoin.setEnabled(false);//아직 칸이 모두 안채워졌으니 false
-//        if() {
-//            if (pwCheck && nameCheck && idCheck && mailCheck) { //모든칸 잘 되었으면 Join버튼 클릭 가능(회원가입 가능)
-//                btJoin.setEnabled(true);
-//            } else btJoin.setEnabled(false);
-//        }
 
         btCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int count = 0;
-                //TODO 아이디 중복확인(primary Key)
-                //if ID 유일하다면 idCheck=true;
-                if (count <= 0) {
-                    idCheck = true;
-                    Toast.makeText(getApplicationContext(), "사용 가능한 ID입니다", Toast.LENGTH_SHORT).show();
-                } else idCheck = false;
+                String idTemp = txtId.getText().toString().trim();
+                task = new PrimaryCheckTask().execute(idTemp);
+                Log.d("!!!!!!!!!!!ID",idTemp);
 
-                if (pwCheck && nameCheck && idCheck && mailCheck) { //모든칸 잘 되었으면 Join버튼 클릭 가능(회원가입 가능)
-                    btJoin.setEnabled(true);
-                } else btJoin.setEnabled(false);
             }
         });
         txtPw1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -145,10 +135,10 @@ public class JoinActivity extends Activity {
         btJoin.setOnClickListener(new View.OnClickListener() {//회원가입 버튼 눌렀을 때
             @Override
             public void onClick(View view) {
-                id = txtId.getText().toString();
-                pw = txtPw1.getText().toString();
-                name = txtName.getText().toString();
-                mail = txtMail.getText().toString();
+                id = txtId.getText().toString().trim();
+                pw = txtPw1.getText().toString().trim();
+                name = txtName.getText().toString().trim();
+                mail = txtMail.getText().toString().trim();
                 joinTask = new MemberJoinJson().execute(id,pw,name,mail);
                 Intent intent = new Intent(JoinActivity.this, LoginActivity.class);
                 startActivity(intent);
@@ -164,6 +154,71 @@ public class JoinActivity extends Activity {
                 finish();
             }
         });
+
+    }
+    private class PrimaryCheckTask extends AsyncTask<String, Void, String>{
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if (s.trim().equals("0")) {
+                idCheck = true;
+                Toast.makeText(getApplicationContext(), "사용 가능한 ID입니다", Toast.LENGTH_SHORT).show();
+            } else{
+                //Toast.makeText(getApplicationContext(), "이미 사용중인 ID입니다.", Toast.LENGTH_SHORT).show();
+                //txtId.setText("");
+                //txtId.isFocused();
+                //idCheck = false;
+                Toast.makeText(getApplicationContext(), "사용 가능한 ID입니다", Toast.LENGTH_SHORT).show();
+                idCheck = true;
+            }
+
+            if (pwCheck && nameCheck && idCheck && mailCheck) { //모든칸 잘 되었으면 Join버튼 클릭 가능(회원가입 가능)
+                btJoin.setEnabled(true);
+            } else btJoin.setEnabled(false);
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                URL url = new URL(
+                        "http://hyunazi.dothome.co.kr/AndDiary/id_check.php");
+
+                HttpURLConnection http = (HttpURLConnection) url.openConnection();
+                http.setDefaultUseCaches(false);
+                http.setDoInput(true);
+                http.setDoOutput(true);
+                http.setRequestMethod("POST");
+
+                http.setRequestProperty("content-type",
+                        "application/x-www-form-urlencoded");
+                StringBuffer buffer = new StringBuffer();
+                buffer.append("id").append("=").append(strings[0]);
+                Log.d("!!!!1taskId",strings[0]);
+
+                OutputStreamWriter outStream = new OutputStreamWriter(http.getOutputStream(), "UTF-8");
+                PrintWriter writer = new PrintWriter(outStream);
+                writer.write(buffer.toString());
+                writer.flush();
+
+                InputStreamReader tmp = new InputStreamReader(
+                        http.getInputStream(), "UTF-8");
+                BufferedReader reader = new BufferedReader(tmp);
+                StringBuilder builder = new StringBuilder();
+                String str;
+                while ((str = reader.readLine()) != null) {
+                    builder.append(str + "\n");
+                }
+                myResult1 = builder.toString();
+
+                Log.d("result", "result : " + myResult1);
+            } catch (MalformedURLException e) {
+                e.getStackTrace();
+            } catch (IOException e) {
+                e.getStackTrace();
+            } // try
+            return myResult1;
+        } // HttpPostData
+
 
     }
 

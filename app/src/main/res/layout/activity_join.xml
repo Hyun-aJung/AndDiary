@@ -35,7 +35,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/txtId"
-            android:layout_weight="6" />
+            android:layout_weight="6"
+            android:inputType="text" />
 
         <Button
             style="?android:attr/buttonStyleSmall"
@@ -139,7 +140,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/txtName"
-            android:layout_weight="6" />
+            android:layout_weight="6"
+            android:inputType="text" />
 
         <TextView
             android:layout_width="wrap_content"
