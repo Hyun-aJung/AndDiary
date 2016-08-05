@@ -100,7 +100,6 @@ public class JoinActivity extends Activity {
             public void onFocusChange(View view, boolean b) {
                 if (!txtName.hasFocus()) {
                     if (txtName.getText().toString().equals("")) {
-                        Toast.makeText(getApplicationContext(), "이름 빈칸임", Toast.LENGTH_SHORT).show();
                         nameCheck = false;
                     } else nameCheck = true;
 
@@ -164,12 +163,12 @@ public class JoinActivity extends Activity {
                 idCheck = true;
                 Toast.makeText(getApplicationContext(), "사용 가능한 ID입니다", Toast.LENGTH_SHORT).show();
             } else{
-                //Toast.makeText(getApplicationContext(), "이미 사용중인 ID입니다.", Toast.LENGTH_SHORT).show();
-                //txtId.setText("");
-                //txtId.isFocused();
-                //idCheck = false;
-                Toast.makeText(getApplicationContext(), "사용 가능한 ID입니다", Toast.LENGTH_SHORT).show();
-                idCheck = true;
+                Toast.makeText(getApplicationContext(), "이미 사용중인 ID입니다.", Toast.LENGTH_SHORT).show();
+                txtId.setText("");
+                txtId.isFocused();
+                idCheck = false;
+//                Toast.makeText(getApplicationContext(), "사용 가능한 ID입니다", Toast.LENGTH_SHORT).show();
+//                idCheck = true;
             }
 
             if (pwCheck && nameCheck && idCheck && mailCheck) { //모든칸 잘 되었으면 Join버튼 클릭 가능(회원가입 가능)

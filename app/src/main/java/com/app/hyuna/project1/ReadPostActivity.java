@@ -1,21 +1,16 @@
 package com.app.hyuna.project1;
 
 import android.app.Activity;
-import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.Display;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -28,26 +23,18 @@ import android.widget.ImageView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.DataOutput;
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.zip.Inflater;
 
 /**
  * Created by 4강의실 on 2016-07-14.
@@ -75,6 +62,9 @@ public class ReadPostActivity extends Activity {
     AlertDialog.Builder dlg;
     Intent intent;
 
+    //선택한 이미지 보여주기
+    Bitmap[] tempBit;
+    int countNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -222,6 +212,7 @@ public class ReadPostActivity extends Activity {
         InputStream[] is = {null,null,null,null,null};
         @Override
         protected Void doInBackground(String... strings) {
+
             String[] temp = strings[0].split(",");
 
             try {
@@ -230,7 +221,6 @@ public class ReadPostActivity extends Activity {
                     is[i] = new URL(url).openStream();
                 }
                 grid.setBitImgStream(is);
-
             }catch (Exception e){
                 e.getStackTrace();
                 Log.d("?!?!?!?!?!?!","Error");
@@ -243,13 +233,25 @@ public class ReadPostActivity extends Activity {
             super.onPostExecute(aVoid);
             grid.setDisplaySize(deviceWidth,deviceWidth);
             gridView.setAdapter(grid);
+
+            for(int k=0; k<is.length; k++){
+                if(is[k]==null){
+                    countNum=k;
+                    break;
+                }
+            }
+            tempBit = new Bitmap[countNum];
+            for(int k=0; k<countNum;k++){
+                tempBit[k] = grid.getBitImg(k);
+            }
             gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     View dialogView = (View)View.inflate(getApplicationContext(),R.layout.activity_dialog,null);
                     AlertDialog.Builder dlg = new AlertDialog.Builder(ReadPostActivity.this);
                     ImageView ivPoster = (ImageView)dialogView.findViewById(R.id.imageView);
-                    ivPoster.setImageBitmap(BitmapFactory.decodeStream(is[i]));
+                    if(i<countNum)ivPoster.setImageBitmap(tempBit[i]);
+                    else ivPoster.setImageResource(R.drawable.default_img);
                     dlg.setTitle("Selected Image");
                     dlg.setView(dialogView);
                     dlg.setNegativeButton("CLOSE",null);
@@ -271,7 +273,6 @@ public class ReadPostActivity extends Activity {
         protected Void doInBackground(String... strings) {
 
             try {
-
                 String boundary = "q0990sdfw0099l";
                 String lineEnd = "\r\n";
                 String twoHyphens = "--";
