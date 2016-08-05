@@ -271,7 +271,7 @@ public class WritePostActivity extends Activity {
                 if(!strings[4].equals("0")){//img1
                 String filePath = strings[4];
                 int index = filePath.lastIndexOf("/");
-                String fileName = filePath.substring(index+1,filePath.length());
+                String fileName = userId+"__"+filePath.substring(index+1,filePath.length());
                     Log.d("!!!!!!!!!fildname1", fileName);
 
                 dos.writeBytes(twoHyphens+boundary+lineEnd);
@@ -299,7 +299,7 @@ public class WritePostActivity extends Activity {
                     dos.writeBytes(lineEnd);
                     String filePath2 = strings[5];
                     int index2 = filePath2.lastIndexOf("/");
-                    String fileName2 = filePath2.substring(index2 + 1, filePath2.length());
+                    String fileName2 = userId+"__"+filePath2.substring(index2 + 1, filePath2.length());
                     Log.d("!!!!!!!!!fildname2", fileName2);
                     dos.writeBytes(twoHyphens + boundary + lineEnd);
                     dos.writeBytes("Content-Disposition: form-data; name=\"img2\";filename=\"" + fileName2 + "\"" + lineEnd);
@@ -326,7 +326,7 @@ public class WritePostActivity extends Activity {
                     dos.writeBytes(lineEnd);
                     String filePath3 = strings[6];
                     int index3 = filePath3.lastIndexOf("/");
-                    String fileName3 = filePath3.substring(index3 + 1, filePath3.length());
+                    String fileName3 =userId+"__"+ filePath3.substring(index3 + 1, filePath3.length());
                     Log.d("!!!!!!!!!fildname3", fileName3);
                     dos.writeBytes(twoHyphens + boundary + lineEnd);
                     dos.writeBytes("Content-Disposition: form-data; name=\"img3\";filename=\"" + fileName3 + "\"" + lineEnd);
@@ -353,7 +353,7 @@ public class WritePostActivity extends Activity {
                     dos.writeBytes(lineEnd);
                     String filePath4 = strings[7];
                     int index4 = filePath4.lastIndexOf("/");
-                    String fileName4 = filePath4.substring(index4 + 1, filePath4.length());
+                    String fileName4 = userId+"__"+filePath4.substring(index4 + 1, filePath4.length());
                     Log.d("!!!!!!!!!fildname4", fileName4);
                     dos.writeBytes(twoHyphens + boundary + lineEnd);
                     dos.writeBytes("Content-Disposition: form-data; name=\"img4\";filename=\"" + fileName4 + "\"" + lineEnd);
@@ -380,7 +380,7 @@ public class WritePostActivity extends Activity {
                     dos.writeBytes(lineEnd);
                     String filePath5 = strings[8];
                     int index5 = filePath5.lastIndexOf("/");
-                    String fileName5 = filePath5.substring(index5 + 1, filePath5.length());
+                    String fileName5 = userId+"__"+filePath5.substring(index5 + 1, filePath5.length());
                     Log.d("!!!!!!!!!fildname5", fileName5);
                     dos.writeBytes(twoHyphens + boundary + lineEnd);
                     dos.writeBytes("Content-Disposition: form-data; name=\"img5\";filename=\"" + fileName5 + "\"" + lineEnd);
