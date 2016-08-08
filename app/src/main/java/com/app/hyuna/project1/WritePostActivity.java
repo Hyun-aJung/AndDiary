@@ -118,11 +118,11 @@ public class WritePostActivity extends Activity {
                     if(btnDate.getText().toString().equals("Choose Date")){ //날짜 선택 안했으면 현재 날짜로 자동 setting
                         long now = System.currentTimeMillis();
                         Date date = new Date(now);
-                        SimpleDateFormat fFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+                        SimpleDateFormat fFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                         fNow = fFormat.format(date);
                         btnDate.setText(fNow);
                     }
-                    task = new WritePostTask().execute(userId,fNow,memoTitle,memo,tempImg[0],tempImg[1],tempImg[2],tempImg[3],tempImg[4]);
+                    task = new WritePostTask().execute(userId,btnDate.getText().toString(),memoTitle,memo,tempImg[0],tempImg[1],tempImg[2],tempImg[3],tempImg[4]);//userId,fNow,memoTitle,memo,tempImg[0],tempImg[1],tempImg[2],tempImg[3],tempImg[4]);
 
                     //이미지 포함 데이터 저장 끝나면 intent
                     Toast.makeText(getApplicationContext(),"저장되었습니다!",Toast.LENGTH_SHORT).show();

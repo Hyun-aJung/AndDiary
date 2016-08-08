@@ -462,7 +462,8 @@ public class ListActivity extends TabActivity{
                         intent.putExtra("id",memoList.get(i).get("id").toString());
                         intent.putExtra("date",memoList.get(i).get("date").toString());
                         startActivity(intent);
-                        //finish();
+                        adapter.notifyDataSetChanged();
+                        finish();
                     }
                 });
 
